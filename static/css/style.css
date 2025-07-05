@@ -10,6 +10,7 @@ body {
 /* Navbar */
 .custom-navbar {
   background-color: #322D29;
+  padding: 10px 0;
 }
 .navbar-brand {
   color: #EFE9E1;
@@ -69,7 +70,7 @@ body {
   font-size: 14px;
 }
 
-/* Signup & Login Shared Styles */
+/* Signup & Login Pages */
 .auth-body, .login-body {
   background: linear-gradient(to bottom right, #EFE9E1, #D7C7BD);
   min-height: 100vh;
@@ -77,13 +78,9 @@ body {
   align-items: center;
   font-family: 'Poppins', sans-serif;
 }
-
-/* Auth Pages Wrapper */
 .register-wrapper, .login-wrapper {
   padding: 60px 0;
 }
-
-/* Banner */
 .auth-banner, .login-banner {
   background-color: #72383D;
   color: white;
@@ -100,8 +97,6 @@ body {
   padding: 2px 10px;
   border-radius: 6px;
 }
-
-/* Auth Form Box */
 .auth-form-box, .glass-card {
   background-color: #fff;
   border-radius: 12px;
@@ -123,4 +118,83 @@ body {
 .auth-form-box a:hover,
 .glass-card a:hover {
   text-decoration: underline;
+}
+
+/* Profile Dropdown */
+.profile-img, .profile-pic {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  cursor: pointer;
+}
+.profile-dropdown {
+  position: relative;
+  display: inline-block;
+}
+.dropdown-content {
+  display: none;
+  position: absolute;
+  right: 0;
+  background-color: #fff;
+  min-width: 180px;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+  z-index: 1000;
+  border-radius: 8px;
+}
+.dropdown-content a {
+  color: #322D29;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+.dropdown-content a:hover {
+  background-color: #D7C7BD;
+}
+.profile-dropdown:hover .dropdown-content {
+  display: block;
+}
+
+/* Explore & Sell Buttons in Navbar (Creator) */
+.creator-actions .nav-link {
+  background-color: #72383D;
+  color: #fff !important;
+  padding: 8px 20px;
+  margin-left: 10px;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: 0.3s ease;
+}
+.creator-actions .nav-link:hover {
+  background-color: #AC9C8D;
+  color: #322D29 !important;
+}
+
+/* Investor Navbar Buttons */
+.investor-nav .nav-link {
+  background-color: #72383D;
+  color: #fff !important;
+  padding: 8px 20px;
+  margin-left: 10px;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: 0.3s ease;
+}
+.investor-nav .nav-link:hover {
+  background-color: #AC9C8D;
+  color: #322D29 !important;
+}
+
+/* Explore Ideas Section */
+.explore-section {
+  background-color: #F8F5F2;
+}
+.idea-card {
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  transition: 0.3s ease;
+}
+.idea-card:hover {
+  transform: translateY(-5px);
 }
