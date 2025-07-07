@@ -2,9 +2,11 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 import sqlite3
 import os
 from werkzeug.security import generate_password_hash, check_password_hash
+import secrets
+
 
 app = Flask(__name__)
-app.secret_key = 'your_secret_key_here'  # Change this to something secure
+app.secret_key = secrets.token_hex(16)  # Generates a secure 32-char hex key
 DB_NAME = "users.db"
 
 # Create DB if it doesn't exist
@@ -91,6 +93,7 @@ def login():
 
     return render_template('login.html')
 
+#creator_dashbard
 @app.route('/creator_dashboard')
 def creator_dashboard():
     if 'username' in session and session.get('role') == 'creator':
@@ -98,6 +101,7 @@ def creator_dashboard():
     flash('Access denied. Please log in as Creator.', 'danger')
     return redirect(url_for('login'))
 
+#investor_dashboard
 @app.route('/investor_dashboard')
 def investor_dashboard():
     if 'username' in session and session.get('role') == 'investor':
@@ -125,3 +129,4 @@ def logout():
 if __name__ == '__main__':
     init_db()
     app.run(debug=True)
+
