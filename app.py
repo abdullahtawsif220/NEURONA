@@ -109,9 +109,10 @@ def investor_dashboard():
 @app.route('/admin_dashboard')
 def admin_dashboard():
     if 'username' in session and session.get('role') == 'admin':
-        return f"Welcome Admin {session['username']}"
+        return render_template('admin_dashboard.html', username=session['username'])
     flash('Access denied. Please log in as Admin.', 'danger')
     return redirect(url_for('login'))
+
 
 # Logout
 @app.route('/logout')
