@@ -4,7 +4,7 @@ import os
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
-app.secret_key = 'Secret_Key_123'  # Change this to something secure
+app.secret_key = 'your_secret_key_here'  # Change this to something secure
 DB_NAME = "users.db"
 
 # Create DB if it doesn't exist
@@ -53,7 +53,7 @@ def register():
             flash('Registration successful! Please login.', 'success')
             return redirect(url_for('login'))
         except sqlite3.IntegrityError:
-            flash('Email already registered.', 'danger')
+            flash('Email already exists.', 'danger')
             return redirect(url_for('register'))
         finally:
             conn.close()
@@ -75,10 +75,11 @@ def login():
         conn.close()
 
         if user:
-            stored_hash = user[3]  # password column
+            stored_hash = user[3]
             if check_password_hash(stored_hash, password):
-                session['username'] = user[1]  # username column
-                session['role'] = user[4]      # role column
+                session['username'] = user[1]
+                session['email'] = email
+                session['role'] = role
                 flash('Login successful!', 'success')
                 return redirect(url_for(f"{role}_dashboard"))
             else:
@@ -90,23 +91,19 @@ def login():
 
     return render_template('login.html')
 
-# Creator Dashboard
 @app.route('/creator_dashboard')
 def creator_dashboard():
     if 'username' in session and session.get('role') == 'creator':
-        username = session['username']
-        return render_template('creator_dashboard.html', username=username)
+        return render_template('creator_dashboard.html', username=session['username'])
     flash('Access denied. Please log in as Creator.', 'danger')
     return redirect(url_for('login'))
 
-# Investor Dashboard
 @app.route('/investor_dashboard')
 def investor_dashboard():
     if 'username' in session and session.get('role') == 'investor':
         return render_template('investor_dashboard.html', username=session['username'])
     flash('Access denied. Please log in as Investor.', 'danger')
     return redirect(url_for('login'))
-
 
 # Admin Dashboard
 @app.route('/admin_dashboard')
