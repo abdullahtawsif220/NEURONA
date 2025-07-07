@@ -26,15 +26,19 @@ body {
 }
 .btn-signup {
   background-color: #72383D;
-  color: #fff;
+  color: #fff !important;
   padding: 6px 16px;
   border: none;
   border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: center;
+  display: inline-block;
   transition: background-color 0.3s ease;
 }
 .btn-signup:hover {
   background-color: #AC9C8D;
-  color: #322D29;
+  color: #322D29 !important;
 }
 
 /* Hero Section */
@@ -56,6 +60,7 @@ body {
   padding: 15px 30px;
   font-size: 1.1rem;
   border-radius: 8px;
+  font-weight: 500;
 }
 .btn-get-started:hover {
   background-color: #AC9C8D;
@@ -197,4 +202,42 @@ body {
 }
 .idea-card:hover {
   transform: translateY(-5px);
+}
+
+/* Admin Dashboard Cards */
+.admin-dashboard {
+  padding: 60px 20px;
+}
+.admin-dashboard h2 {
+  font-size: 2rem;
+  margin-bottom: 30px;
+}
+.admin-card {
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  padding: 30px;
+  text-align: center;
+  transition: 0.3s ease;
+}
+.admin-card:hover {
+  transform: translateY(-5px);
+}
+.admin-card h5 {
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+.admin-card p {
+  font-size: 0.95rem;
+  margin-bottom: 20px;
+}
+.admin-card .btn-signup {
+  font-size: 0.9rem;
+  padding: 8px 20px;
+}
+
+.logo-img {
+  height: 32px;
+  width: auto;
+  margin-right: 8px;
 }
