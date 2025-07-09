@@ -93,12 +93,15 @@ body {
   flex: 1;
   min-width: 300px;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding-top: 40px;
 }
 
 .hero-right {
   flex: 1;
   min-width: 300px;
+  padding-top: 20px;
 }
 
 .subtext {
@@ -111,10 +114,11 @@ body {
 }
 
 .hero-right h1 {
-  font-size: 2.8rem;
+  font-size: 3.2rem;
   line-height: 1.3;
   font-weight: 700;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
+  margin-top: -20px;
 }
 
 .gradient-text {
@@ -122,41 +126,138 @@ body {
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
+  animation: gradientShift 3s ease-in-out infinite alternate;
 }
 
+@keyframes gradientShift {
+  0% {
+    background: linear-gradient(to right, #4f47ff, #8a75ff);
+    -webkit-background-clip: text;
+    background-clip: text;
+  }
+  100% {
+    background: linear-gradient(to right, #8a75ff, #4f47ff, #a855f7);
+    -webkit-background-clip: text;
+    background-clip: text;
+  }
+}
 .description {
   font-size: 1.1rem;
   color: #cccccc;
   max-width: 500px;
+  margin-top: -10px;
 }
 
 /* Get Started Button */
 .btn-outline {
   background-color: transparent;
   color: white;
-  padding: 14px 32px;
+  padding: 18px 45px;
   border: 2px solid white;
   border-radius: 8px;
   text-decoration: none;
   font-weight: 600;
-  font-size: 1rem;
-  transition: 0.3s ease;
+  font-size: 1.2rem;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
+}
 }
 
 .btn-outline:hover {
-  background-color: #ffffff11;
+  background: linear-gradient(135deg, #4f47ff, #8a75ff);
+  border-color: #4f47ff;
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 8px 25px rgba(79, 71, 255, 0.3);
+  color: white;
+}
+}
+.btn-outline:hover::before {
+  left: 100%;
 }
 
+.btn-outline:active {
+  transform: translateY(-1px) scale(1.02);
+  transition: all 0.1s ease;
+}
 /* Footer */
+/* Floating animation for the button */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
 .footer {
+.btn-outline {
+  animation: float 3s ease-in-out infinite;
+}
   background-color: #0c0b1a;
+.btn-outline:hover {
+  animation: none;
+}
   color: #AAAAAA;
+/* Pulse effect on hover */
+@keyframes pulse {
+  0% {
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
+  }
+  50% {
+    box-shadow: 0 8px 25px rgba(79, 71, 255, 0.4);
+  }
+  100% {
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
+  }
+}
   text-align: center;
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .hero-content-container {
+    flex-direction: column-reverse;
+    text-align: center;
+    gap: 40px;
+  }
+  
+  .hero-left {
+    justify-content: center;
+    padding-top: 20px;
+  }
+  
+  .hero-right {
+    padding-top: 0;
+  }
+  
+  .hero-right h1 {
+    font-size: 2.5rem;
+    margin-top: 0;
+  }
+  
+  .btn-outline {
+    padding: 16px 35px;
+    font-size: 1.1rem;
+  }
+}</parameter>
   padding: 20px 0;
   font-size: 0.9rem;
   border-top: 1px solid #222;
 }
 
+.btn-outline::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
 
 /* Signup & Login Pages */
 .auth-body, .login-body {
