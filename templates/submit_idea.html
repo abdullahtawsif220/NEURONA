@@ -1,0 +1,320 @@
+{% extends "base.html" %}
+{% block title %}Submit Idea – Neurona{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Step: <span id="step-title">Basic Info</span></h1>
+
+<form method="POST" enctype="multipart/form-data" action="{{ url_for('submit_idea') }}" id="ideaForm">
+
+  <!-- Basic Info -->
+  <section id="basic-info">
+    <h4>📝 Basic Info</h4>
+
+    <div class="mb-3">
+      <label>Title*</label>
+      <input required name="title" class="form-control" id="title" />
+      <div class="form-text text-white">Title should be a single capitalized word (e.g., "Innova").</div>
+    </div>
+
+    <div class="mb-3">
+      <label>Category*</label>
+      <div id="category-options" class="d-flex flex-wrap gap-2">
+        {% for cat in ['Technology', 'Healthcare', 'Education', 'Finance', 'Environment', 'AI'] %}
+        <button type="button" class="btn btn-outline-primary btn-sm" onclick="toggleSelection(this, 'category')">{{ cat }}</button>
+        {% endfor %}
+      </div>
+      <input type="hidden" name="category" id="category" required>
+      <div class="form-text text-white">Selected: <span id="category-selected" class="fw-bold"></span></div>
+    </div>
+
+    <div class="mb-3">
+      <label>Industry*</label>
+      <div id="industry-options" class="d-flex flex-wrap gap-2">
+        {% for ind in ['EdTech', 'MedTech', 'FinTech', 'AgriTech', 'CleanTech', 'PropTech'] %}
+        <button type="button" class="btn btn-outline-primary btn-sm" onclick="toggleSelection(this, 'industry')">{{ ind }}</button>
+        {% endfor %}
+      </div>
+      <input type="hidden" name="industry" id="industry" required>
+      <div class="form-text text-white">Selected: <span id="industry-selected" class="fw-bold"></span></div>
+    </div>
+
+    <div class="mb-3">
+      <label>Location*</label>
+      <input name="location" class="form-control" id="location" required />
+    </div>
+
+    <div class="mb-3">
+      <label>Tags / Keywords*</label>
+      <input name="tags" class="form-control" id="tags" required />
+      <div class="form-text text-white">Enter valid words separated by commas.</div>
+    </div>
+
+    <button type="button" class="btn btn-primary" onclick="validateSection('basic-info', 'description')">Next</button>
+  </section>
+
+  <!-- Description -->
+  <section id="description" class="d-none">
+    <h4>📄 Description</h4>
+    <div class="mb-3">
+      <textarea name="summary" class="form-control" rows="2" placeholder="Short Summary*" required></textarea>
+      <div class="form-text text-white">Limit to 5 sentences and under 75 words.</div>
+    </div>
+    <div class="mb-3">
+      <textarea name="description" class="form-control" rows="4" placeholder="Full Description (optional)"></textarea>
+    </div>
+    <div class="mb-3">
+      <textarea name="problem_statement" class="form-control" rows="2" placeholder="Problem Statement*" required></textarea>
+      <div class="form-text text-white">Must be a single sentence.</div>
+    </div>
+    <div class="mb-3">
+      <textarea name="solution" class="form-control" rows="2" placeholder="Solution*" required></textarea>
+      <div class="form-text text-white">Must be a single sentence.</div>
+    </div>
+    <div class="mb-3">
+      <textarea name="market_opportunity" class="form-control" rows="3" placeholder="Market Opportunity (optional)"></textarea>
+    </div>
+    <div class="mb-3">
+      <textarea name="competitive_advantage" class="form-control" rows="3" placeholder="Competitive Advantage (optional)"></textarea>
+    </div>
+    <button type="button" class="btn btn-secondary" onclick="showSection('basic-info')">Back</button>
+    <button type="button" class="btn btn-primary" onclick="validateSection('description', 'team-info')">Next</button>
+  </section>
+
+  <!-- Team Info -->
+  <section id="team-info" class="d-none">
+    <h4>👥 Team Info</h4>
+    <div class="mb-3">
+      <textarea name="founders" class="form-control" rows="3" placeholder="Founders (e.g., Tim Cook (https://www.linkedin.com/in/cooktim/))" required></textarea>
+    </div>
+    <div class="mb-3">
+      <textarea name="team_members" class="form-control" rows="3" placeholder="Team Members (e.g., Jane Doe, CTO (https://www.linkedin.com/in/janedoe/))"></textarea>
+    </div>
+    <button type="button" class="btn btn-secondary" onclick="showSection('description')">Back</button>
+    <button type="button" class="btn btn-primary" onclick="validateSection('team-info', 'funding')">Next</button>
+  </section>
+
+<!-- Funding -->
+<section id="funding" class="d-none">
+  <h4>💰 Funding</h4>
+  <div class="mb-3">
+    <input name="funding_needed" type="number" class="form-control" placeholder="Amount Needed ($)*" min="100" required>
+  </div>
+  <div class="mb-3">
+    <textarea name="use_of_funds" class="form-control" placeholder="Use of Funds (e.g., 40% dev, 30% marketing)*" required></textarea>
+  </div>
+
+  <div class="mb-3">
+    <label>Product Stage*</label>
+    <select name="stage" class="form-select mb-3" required>
+      <option value="">Select a stage</option>
+      <option value="Idea">Idea</option>
+      <option value="Prototype">Prototype</option>
+      <option value="MVP">MVP</option>
+      <option value="Beta">Beta</option>
+      <option value="Launched">Launched</option>
+      <option value="Growth">Growth</option>
+    </select>
+  </div>
+
+  <div class="mb-3">
+    <input name="equity_offered" type="number" step="0.01" class="form-control" placeholder="Equity Offered (%)*" required>
+    <div class="form-text text-white">Enter a valid percentage (0 to 100). Must not exceed 100%.</div>
+  </div>
+
+  <button type="button" class="btn btn-secondary" onclick="showSection('team-info')">Back</button>
+  <button type="button" class="btn btn-primary" onclick="validateSection('funding', 'attachments')">Next</button>
+</section>
+
+
+  <!-- Attachments -->
+  <section id="attachments" class="d-none">
+    <h4>📎 Attachments</h4>
+    <div class="mb-3">
+      <label>Business Plan (required)</label>
+      <input name="business_plan" type="file" class="form-control" required>
+    </div>
+    <div class="mb-3">
+      <label><input type="checkbox" id="patentCheck"> I want to upload a patent</label>
+      <input name="patent" type="file" id="patentUpload" class="form-control mt-2 d-none">
+    </div>
+    <div class="mb-3">
+      <input name="pitch_deck" type="file" class="form-control" accept=".pdf,.ppt,.pptx">
+    </div>
+    <div class="mb-3">
+      <input name="images" type="file" multiple class="form-control" accept="image/*">
+    </div>
+    <div class="mb-3">
+      <input name="video_pitch" type="file" class="form-control" accept="video/*">
+    </div>
+    <div class="form-text text-white">Provide supporting documents like pitch deck, images, videos. Upload patent only if checked.</div>
+    <button type="button" class="btn btn-secondary" onclick="showSection('funding')">Back</button>
+    <button type="button" class="btn btn-primary" onclick="validateSection('attachments', 'contact')">Next</button>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact" class="d-none">
+    <h4>📞 Contact & Privacy</h4>
+    <input name="contact_email" type="email" class="form-control mb-3" required placeholder="Contact Email*">
+    <select name="visibility" class="form-select mb-3">
+      <option value="public">Public</option>
+      <option value="verified_investors">Only to Verified Investors</option>
+    </select>
+    <div class="form-check mb-3">
+      <input type="checkbox" class="form-check-input" id="accept_nda" name="accept_nda">
+      <label class="form-check-label" for="accept_nda">Accept NDA Requests</label>
+    </div>
+    <button type="button" class="btn btn-secondary" onclick="showSection('attachments')">Back</button>
+    <button type="submit" class="btn btn-success mt-2">Submit Idea</button>
+  </section>
+</form>
+{% endblock %}
+
+{% block scripts %}
+
+<script>
+  const steps = {
+    'basic-info': 'Basic Info',
+    'description': 'Description',
+    'team-info': 'Team Info',
+    'funding': 'Funding',
+    'attachments': 'Attachments',
+    'contact': 'Contact & Privacy'
+  };
+
+  document.getElementById('patentCheck').addEventListener('change', function() {
+    document.getElementById('patentUpload').classList.toggle('d-none', !this.checked);
+  });
+
+  function showSection(id) {
+    document.querySelectorAll('section').forEach(s => s.classList.add('d-none'));
+    document.getElementById(id).classList.remove('d-none');
+    document.getElementById('step-title').innerText = steps[id];
+  }
+
+  function validateSection(current, next) {
+    const isValid = validateFields(current);
+    if (isValid) showSection(next);
+  }
+
+  function validateFields(sectionId) {
+    let isValid = true;
+    const section = document.getElementById(sectionId);
+    const inputs = section.querySelectorAll('input, textarea, select');
+
+    const wordCount = text => text.trim().split(/\s+/).length;
+    const sentenceCount = text => (text.match(/[.!?]+/g) || []).length;
+
+    inputs.forEach(input => {
+      input.classList.remove('is-invalid', 'is-valid');
+      const val = input.value.trim();
+
+      if (input.hasAttribute('required') && !val) {
+        input.classList.add('is-invalid');
+        isValid = false;
+        return;
+      }
+
+      switch (input.name) {
+        case 'summary':
+        case 'market_opportunity':
+        case 'competitive_advantage':
+          if (val) {
+            const valid = sentenceCount(val) <= 5 && wordCount(val) <= 75;
+            input.classList.add(valid ? 'is-valid' : 'is-invalid');
+            if (!valid && input.name === 'summary') isValid = false;
+          }
+          break;
+        case 'problem_statement':
+        case 'solution':
+          if (val) {
+            const valid = sentenceCount(val) === 1;
+            input.classList.add(valid ? 'is-valid' : 'is-invalid');
+            if (!valid) isValid = false;
+          }
+          break;
+        case 'founders':
+          if (val) {
+            const founderRegex = /^.+\(\s*(https?:\/\/)?(www\.)?linkedin\.com\/in\/[^\)]+\s*\)$/gm;
+            const valid = val.split('\n').every(line => founderRegex.test(line.trim()));
+            input.classList.add(valid ? 'is-valid' : 'is-invalid');
+            if (!valid) isValid = false;
+          }
+          break;
+        case 'team_members':
+          if (val) {
+            const teamRegex = /^.+,\s*.+\s*\(\s*(https?:\/\/)?(www\.)?linkedin\.com\/in\/[^\)]+\s*\)$/gm;
+            const valid = val.split('\n').every(line => teamRegex.test(line.trim()));
+            input.classList.add(valid ? 'is-valid' : 'is-invalid');
+          }
+          break;
+        case 'funding_needed':
+          const amount = parseFloat(val);
+          if (!(amount >= 100)) {
+            input.classList.add('is-invalid');
+            isValid = false;
+          } else {
+            input.classList.add('is-valid');
+          }
+          break;
+        case 'equity_offered':
+          const equity = parseFloat(val);
+          if (!(equity >= 0 && equity <= 100)) {
+            input.classList.add('is-invalid');
+            isValid = false;
+          } else {
+            input.classList.add('is-valid');
+          }
+          break;
+        case 'stage':
+  if (!val) {
+    input.classList.add('is-invalid');
+    isValid = false;
+  } else {
+    input.classList.add('is-valid');
+  }
+  break;
+
+        case 'business_plan':
+          if (!input.files.length) {
+            input.classList.add('is-invalid');
+            isValid = false;
+          } else {
+            input.classList.add('is-valid');
+          }
+          break;
+        case 'patent':
+          const checked = document.getElementById('patentCheck').checked;
+          if (checked && !input.files.length) {
+            input.classList.add('is-invalid');
+            isValid = false;
+          } else if (checked) {
+            input.classList.add('is-valid');
+          }
+          break;
+      }
+    });
+
+    return isValid;
+  }
+
+  function toggleSelection(button, field) {
+    const value = button.innerText;
+    const hiddenInput = document.getElementById(field);
+    const selectedDisplay = document.getElementById(`${field}-selected`);
+    let selected = hiddenInput.value ? hiddenInput.value.split(',') : [];
+
+    if (selected.includes(value)) {
+      selected = selected.filter(v => v !== value);
+      button.classList.remove('active');
+    } else {
+      selected.push(value);
+      button.classList.add('active');
+    }
+
+    hiddenInput.value = selected.join(',');
+    selectedDisplay.innerText = selected.join(', ');
+  }
+
+  showSection('basic-info');
+</script>
+{% endblock %}
