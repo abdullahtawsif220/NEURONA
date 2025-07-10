@@ -1,4 +1,3 @@
-<!-- templates/creator_dashboard.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -38,7 +37,12 @@
   <!-- Explore Ideas Section -->
   <section class="py-5">
     <div class="container">
-      <h2 class="mb-4">Explore Ideas</h2>
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Explore Ideas</h2>
+        <a href="{{ url_for('submit_idea') }}" class="btn btn-primary">Upload Idea</a>
+      </div>
+
+      <!-- Idea cards section -->
       <div class="row g-4">
         <div class="col-md-4">
           <div class="glass-card p-4">
@@ -47,6 +51,7 @@
             <a href="#" class="btn btn-signup btn-sm">View More</a>
           </div>
         </div>
+        <!-- Add more idea cards dynamically if needed -->
       </div>
     </div>
   </section>
