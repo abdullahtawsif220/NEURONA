@@ -1,0 +1,25 @@
+<!-- templates/admin_verify_investors.html -->
+<div class="container mt-5">
+  <h3>Pending Investor Verifications</h3>
+  <table class="table table-bordered mt-3">
+    <thead>
+      <tr>
+        <th>Name</th><th>Email</th><th>Phone</th><th>Gov ID</th><th>Reason</th><th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for investor in investors %}
+      <tr>
+        <td>{{ investor.full_name }}</td>
+        <td>{{ investor.email }}</td>
+        <td>{{ investor.phone }}</td>
+        <td>{{ investor.gov_id }}</td>
+        <td>{{ investor.verification_reason }}</td>
+        <td>
+          <a href="{{ url_for('approve_investor', user_id=investor.id) }}" class="btn btn-success btn-sm">Approve</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>

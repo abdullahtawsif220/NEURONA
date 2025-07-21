@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Register - Neurona</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- Your Custom Styles -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .hint {
+            font-size: 0.875em;
+            margin-top: 5px;
+        }
+        .hint.valid {
+            color: green;
+        }
+        .hint.invalid {
+            color: red;
+        }
+        .is-valid {
+            border-color: green !important;
+        }
+        .is-invalid {
+            border-color: red !important;
+        }
+    </style>
+</head>
+<body class="auth-body">
+<div class="container register-wrapper" style="max-width: 500px;">
+    <h2 class="mb-4">Register</h2>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="flash-message alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <form method="POST" action="{{ url_for('register') }}" class="auth-form-box" id="registerForm">
+        <div class="mb-3">
+            <label for="username" class="form-label">Username</label>
+            <input required type="text" class="form-control" id="username" name="username" />
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label">Email address</label>
+            <input required type="email" class="form-control" id="email" name="email" />
+            <div id="emailHint" class="hint"></div>
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input required type="password" class="form-control" id="password" name="password" />
+            <div id="passwordHint" class="hint"></div>
+        </div>
+        <div class="mb-3">
+            <label for="confirm_password" class="form-label">Confirm Password</label>
+            <input required type="password" class="form-control" id="confirm_password" name="confirm_password" />
+            <div id="confirmHint" class="hint"></div>
+        </div>
+        <div class="mb-3">
+            <label for="role" class="form-label">Role</label>
+            <select class="form-select" id="role" name="role" required>
+                <option value="">Select role</option>
+                <option value="creator">Creator</option>
+                <option value="investor">Investor</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary w-100 btn-signup" id="submitBtn" disabled>Register</button>
+    </form>
+
+    <p class="mt-3 text-center">
+        Already have an account? <a href="{{ url_for('login') }}">Login here</a>
+    </p>
+</div>
+
+<!-- Flash auto-hide -->
+<script>
+  window.setTimeout(function() {
+    const flashes = document.querySelectorAll('.flash-message');
+    flashes.forEach(flash => {
+      flash.style.transition = 'opacity 0.5s ease-out';
+      flash.style.opacity = '0';
+      setTimeout(() => flash.remove(), 500);
+    });
+  }, 2000);
+</script>
+
+<!-- Live form validation -->
+<script>
+    const allowedDomains = ["gmail.com", "yahoo.com", "outlook.com", "hotmail.com", "neurona.com"];
+    const username = document.getElementById("username");
+    const email = document.getElementById("email");
+    const password = document.getElementById("password");
+    const confirm = document.getElementById("confirm_password");
+    const role = document.getElementById("role");
+    const submitBtn = document.getElementById("submitBtn");
+
+    const emailHint = document.getElementById("emailHint");
+    const passwordHint = document.getElementById("passwordHint");
+    const confirmHint = document.getElementById("confirmHint");
+
+    function validateEmail() {
+        const domain = email.value.split('@')[1];
+        if (domain && allowedDomains.includes(domain.toLowerCase())) {
+            email.classList.add('is-valid');
+            email.classList.remove('is-invalid');
+            emailHint.textContent = "✅ Allowed email domain";
+            emailHint.className = "hint valid";
+            return true;
+        } else {
+            email.classList.add('is-invalid');
+            email.classList.remove('is-valid');
+            emailHint.textContent = "❌ Use email from: " + allowedDomains.join(", ");
+            emailHint.className = "hint invalid";
+            return false;
+        }
+    }
+
+    function validatePassword() {
+        const value = password.value;
+        const isValid = value.length >= 8 && /[!@#$%^&*(),.?":{}|<>]/.test(value);
+        if (isValid) {
+            password.classList.add('is-valid');
+            password.classList.remove('is-invalid');
+            passwordHint.textContent = "✅ Strong password";
+            passwordHint.className = "hint valid";
+            return true;
+        } else {
+            password.classList.add('is-invalid');
+            password.classList.remove('is-valid');
+            passwordHint.textContent = "❌ At least 8 characters and 1 special character";
+            passwordHint.className = "hint invalid";
+            return false;
+        }
+    }
+
+    function validateConfirm() {
+        if (confirm.value === password.value && confirm.value.length > 0) {
+            confirm.classList.add('is-valid');
+            confirm.classList.remove('is-invalid');
+            confirmHint.textContent = "✅ Passwords match";
+            confirmHint.className = "hint valid";
+            return true;
+        } else {
+            confirm.classList.add('is-invalid');
+            confirm.classList.remove('is-valid');
+            confirmHint.textContent = "❌ Passwords do not match";
+            confirmHint.className = "hint invalid";
+            return false;
+        }
+    }
+
+    function validateForm() {
+        const allValid =
+            username.value.trim() !== "" &&
+            validateEmail() &&
+            validatePassword() &&
+            validateConfirm() &&
+            role.value !== "";
+
+        submitBtn.disabled = !allValid;
+    }
+
+    username.addEventListener("input", validateForm);
+    email.addEventListener("input", () => { validateEmail(); validateForm(); });
+    password.addEventListener("input", () => { validatePassword(); validateConfirm(); validateForm(); });
+    confirm.addEventListener("input", () => { validateConfirm(); validateForm(); });
+    role.addEventListener("change", validateForm);
+</script>
+
+<!-- Bootstrap JS Bundle -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

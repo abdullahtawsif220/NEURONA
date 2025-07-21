@@ -1,0 +1,518 @@
+{% extends "base.html" %}
+{% block title %}Submit Idea – Neurona{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="glass-card mx-auto p-4" style="max-width: 800px; background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border-radius: 16px; box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 ); border: 1px solid rgba( 255, 255, 255, 0.18 );">
+    <h1 class="text-white text-center mb-4"><span id="step-title">Basic Info</span></h1>
+
+    <!-- Progress Bar -->
+    <div class="progress mb-4">
+      <div id="progress-bar" class="progress-bar bg-success" role="progressbar" style="width: 0%;">
+        Step 1 of 3
+      </div>
+    </div>
+
+    <form method="POST" enctype="multipart/form-data" action="{{ url_for('submit_idea') }}" id="ideaForm">
+
+      <!-- Section 1: Basic Info -->
+      <section id="basic-info">
+        <div class="mb-3">
+          <label for="title" class="form-label text-white">Title</label>
+          <textarea name="title" id="title" class="form-control bg-transparent text-white" rows="2" placeholder="Title" required oninput="capitalizeFirstWord(this)"></textarea>
+<div class="invalid-feedback">Title must start with a capital letter and be no more than 2 words.</div>
+        </div>
+
+        <div class="mb-3">
+  <label class="form-label text-white">Category</label>
+  <div id="category-options" class="d-flex flex-wrap gap-2">
+    {% for cat in ['Technology', 'Healthcare', 'Education', 'Finance', 'Environment', 'AI'] %}
+    <button type="button" class="btn btn-outline-primary btn-sm" onclick="toggleSelection(this, 'category')">{{ cat }}</button>
+    {% endfor %}
+  </div>
+  <input type="hidden" name="category" id="category" required class="form-control d-none">
+  <div class="form-text text-white">Selected: <span id="category-selected" class="fw-bold"></span></div>
+  <div id="category-feedback" class="invalid-feedback">Please select at least one category.</div>
+</div>
+
+
+
+       <div class="mb-3">
+  <label class="form-label text-white">Tags / Keywords</label>
+  <div class="d-flex gap-2">
+    <input type="text" id="tag-input" class="form-control bg-transparent text-white" placeholder="Enter a tag">
+    <button type="button" class="btn btn-success" onclick="addTag()">+</button>
+  </div>
+  <div id="tag-list" class="mt-2 d-flex flex-wrap gap-2"></div>
+  <input type="hidden" name="tags" id="tags" required>
+  <div class="invalid-feedback">Please add at least one tag.</div>
+  <div class="form-text text-white">Click + after each tag. Add tags relevant to your idea. </div>
+</div>
+
+        <div class="mb-3">
+          <label for="summary" class="form-label text-white">Summary</label>
+          <textarea name="summary" id="summary" class="form-control bg-transparent text-white" rows="2" placeholder="Short Summary*" required></textarea>
+          <div class="invalid-feedback">Summary must be under 75 words and 5 sentences.</div>
+        </div>
+
+        <div class="mb-3">
+          <label for="problem_statement" class="form-label text-white">Problem Statement</label>
+          <textarea name="problem_statement" id="problem_statement" class="form-control bg-transparent text-white" rows="2" placeholder="Problem Statement*" required></textarea>
+          <div class="invalid-feedback">Must be exactly 1 sentence with fullstop.</div>
+        </div>
+
+        <div class="mb-3">
+          <label for="solution" class="form-label text-white">Solution</label>
+          <textarea name="solution" id="solution" class="form-control bg-transparent text-white" rows="2" placeholder="Solution*" required></textarea>
+          <div class="invalid-feedback">Must be exactly 1 sentence with fullstop.</div>
+        </div>
+
+        <button type="button" class="btn btn-primary" onclick="validateSection('basic-info', 'team-info')">Next</button>
+      </section>
+
+      <!-- Section 2: Team Info -->
+      <section id="team-info" class="d-none">
+
+        <div class="mb-3">
+  <label class="form-label text-white">Founder LinkedIn Profile(s)</label>
+  <div id="founder-links">
+    <input type="url" name="founders[]" class="form-control mb-2 bg-transparent text-white" placeholder="https://www.linkedin.com/in/example" required>
+  </div>
+  <button type="button" class="btn btn-sm btn-outline-primary" onclick="addField('founder-links', 'founders[]')">+ Add Founder</button>
+  <div class="invalid-feedback">Please enter a valid LinkedIn URL.</div>
+</div>
+
+
+        <div class="mb-3">
+          <label class="form-label text-white">Team Member LinkedIn Profile(s)(Optional)</label>
+          <div id="team-links">
+            <input type="url" name="team_members[]" class="form-control mb-2 bg-transparent text-white" placeholder="https://www.linkedin.com/in/example">
+          </div>
+          <button type="button" class="btn btn-sm btn-outline-primary" onclick="addField('team-links', 'team_members[]')">+ Add Team Member</button>
+        </div>
+
+        <div class="mb-3">
+          <label for="contact_email" class="form-label text-white">Contact Email</label>
+          <input name="contact_email" id="contact_email" type="email" class="form-control mb-3 bg-transparent text-white" required placeholder="Contact Email*">
+          <div class="invalid-feedback">Enter a valid email address.</div>
+        </div>
+
+        <button type="button" class="btn btn-secondary" onclick="showSection('basic-info')">Back</button>
+        <button type="button" class="btn btn-primary" onclick="validateSection('team-info', 'funding')">Next</button>
+      </section>
+
+      <!-- Section 3: Funding -->
+      <section id="funding" class="d-none">
+
+        <div class="mb-3">
+          <label for="funding_needed" class="form-label text-white">Ask Price(Taka)</label>
+          <input name="funding_needed" id="funding_needed" type="number" class="form-control bg-transparent text-white" placeholder="Amount Needed ($)*" min="100" required>
+          <div class="invalid-feedback">Please enter a valid amount greater than or equal to $100.</div>
+        </div>
+
+  <div class="mb-3">
+  <label class="form-label text-white">Product Stage</label>
+
+  <div id="stage-options" class="d-flex flex-wrap gap-2">
+    {% for stage in ['Idea', 'Prototype', 'MVP', 'Beta', 'Launched', 'Growth'] %}
+    <button type="button" class="btn btn-outline-primary btn-sm" onclick="toggleSelection(this, 'stage')">{{ stage }}</button>
+    {% endfor %}
+  </div>
+
+  <!-- ✅ Keep only this hidden input -->
+  <input type="text" name="stage" id="stage" required style="opacity: 0; height: 0; position: absolute; pointer-events: none;">
+
+
+  <div class="form-text text-white">Selected: <span id="stage-selected" class="fw-bold"></span></div>
+  <div id="stage-feedback" class="invalid-feedback d-none">Please select a product stage.</div>
+      <div class="form-text text-white">Please select a product stage. </div>
+</div>
+
+
+
+
+
+        <div class="mb-3">
+          <label for="equity_offered" class="form-label text-white">Equity Offered(%)</label>
+          <input name="equity_offered" id="equity_offered" type="number" step="0.01" class="form-control bg-transparent text-white" placeholder="Equity Offered (%)*" required>
+          <div class="invalid-feedback">Enter a percentage between 0% and 100%.</div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label text-white">Business Plan</label>
+          <input name="business_plan" type="file" class="form-control bg-transparent text-white" required>
+        </div>
+
+        <div class="mb-3">
+  <div style="display: flex; align-items: center; gap: 8px;">
+    <input type="checkbox" id="patentCheck" style="width: 16px; height: 16px; margin: 0;">
+    <label for="patentCheck" class="text-white mb-0" style="line-height: 1;">I want to upload a patent</label>
+  </div>
+  <input name="patent" type="file" id="patentUpload" class="form-control mt-2 d-none bg-transparent text-white">
+            <div class="invalid-feedback">Please upload a patent file or uncheck the box.</div>
+</div>
+
+
+
+
+
+        <div class="mb-3">
+          <label>Upload Any Other File(s)(Optional)</label>
+          <div id="other-files">
+            <input name="other_files[]" type="file" class="form-control mb-2 bg-transparent text-white">
+          </div>
+          <button type="button" class="btn btn-sm btn-outline-primary" onclick="addFileField()">+ Add Another File</button>
+        </div>
+
+        <button type="button" class="btn btn-secondary" onclick="showSection('team-info')">Back</button>
+        <button type="button" class="btn btn-success mt-2" onclick="validateSection('funding', 'submit')">Submit Idea</button>
+
+      </section>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Section logic
+const steps = {
+  'basic-info': 'Basic Info',
+  'team-info': 'Team Info & Contact',
+  'funding': 'Funding & Attachments'
+};
+
+document.getElementById('patentCheck').addEventListener('change', function () {
+  document.getElementById('patentUpload').classList.toggle('d-none', !this.checked);
+});
+
+function showSection(id) {
+  document.querySelectorAll('section').forEach(s => s.classList.add('d-none'));
+  document.getElementById(id).classList.remove('d-none');
+  document.getElementById('step-title').innerText = steps[id];
+
+  const stepKeys = Object.keys(steps);
+  const currentIndex = stepKeys.indexOf(id);
+  const progress = Math.round(((currentIndex + 1) / stepKeys.length) * 100);
+
+  const progressBar = document.getElementById('progress-bar');
+  progressBar.style.width = `${progress}%`;
+  progressBar.innerText = `Step ${currentIndex + 1} of ${stepKeys.length}`;
+}
+
+function validateSection(current, next) {
+  const isValid = validateFields(current);
+  if (isValid) {
+    if (next === 'funding') {
+      showSection(next);
+    } else if (next === 'submit') {
+      document.getElementById('ideaForm').submit();
+    } else {
+      showSection(next);
+    }
+  }
+}
+
+
+function validateFields(sectionId) {
+  let isValid = true;
+  const section = document.getElementById(sectionId);
+  const inputs = section.querySelectorAll('input, textarea, select');
+
+  const wordCount = text => text.trim().split(/\s+/).length;
+  const sentenceCount = text => (text.match(/[.!?]+/g) || []).length;
+
+  inputs.forEach(input => {
+    input.classList.remove('is-invalid', 'is-valid');
+    const val = input.value.trim();
+
+    if (input.hasAttribute('required') && !val) {
+      input.classList.add('is-invalid');
+      isValid = false;
+      return;
+    }
+
+    switch (input.name) {
+      case 'summary':
+        const validSummary = sentenceCount(val) <= 5 && wordCount(val) <= 75;
+        input.classList.add(validSummary ? 'is-valid' : 'is-invalid');
+        if (!validSummary) isValid = false;
+        break;
+      case 'problem_statement':
+      case 'solution':
+        const validSentence = sentenceCount(val) === 1;
+        input.classList.add(validSentence ? 'is-valid' : 'is-invalid');
+        if (!validSentence) isValid = false;
+        break;
+      case 'founders[]':
+      case 'team_members[]':
+        const linkedinRegex = /^(https?:\/\/)?(www\.)?linkedin\.com\/in\/[a-zA-Z0-9\-_%]+\/?$/;
+        if (val && !linkedinRegex.test(val)) {
+          input.classList.add('is-invalid');
+          if (input.name === 'founders[]') isValid = false;
+        } else if (val) {
+          input.classList.add('is-valid');
+        }
+        break;
+      case 'contact_email':
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const emailValid = emailRegex.test(val);
+        input.classList.add(emailValid ? 'is-valid' : 'is-invalid');
+        if (!emailValid) isValid = false;
+        break;
+      case 'funding_needed':
+        const amount = parseFloat(val);
+        if (!(amount >= 100)) {
+          input.classList.add('is-invalid');
+          isValid = false;
+        } else {
+          input.classList.add('is-valid');
+        }
+        break;
+      case 'equity_offered':
+        const equity = parseFloat(val);
+        if (!(equity >= 0 && equity <= 100)) {
+          input.classList.add('is-invalid');
+          isValid = false;
+        } else {
+          input.classList.add('is-valid');
+        }
+        break;
+
+      case 'business_plan':
+        if (!input.files.length) {
+          input.classList.add('is-invalid');
+          isValid = false;
+        } else {
+          input.classList.add('is-valid');
+        }
+        break;
+      case 'patent': {
+  const checkbox = document.getElementById('patentCheck');
+  const fileInput = input; // This is 'patent' input from the loop
+
+  if (checkbox.checked) {
+    if (!fileInput.files || fileInput.files.length === 0) {
+      fileInput.classList.remove('is-valid');
+      fileInput.classList.add('is-invalid');
+      isValid = false;
+    } else {
+      fileInput.classList.remove('is-invalid');
+      fileInput.classList.add('is-valid');
+    }
+  } else {
+    // Not required if checkbox isn't checked — reset any state
+    fileInput.classList.remove('is-valid');
+    fileInput.classList.remove('is-invalid');
+  }
+  break;
+}
+
+
+        case 'category':
+  if (!val) {
+    input.classList.add('is-invalid');
+    isValid = false;
+  } else {
+    input.classList.remove('is-invalid');
+    input.classList.add('is-valid');
+  }
+  break;
+case 'stage':
+  const stageFeedback = document.getElementById('stage-feedback');
+  if (!val) {
+    input.classList.add('is-invalid');
+    input.classList.remove('is-valid');
+    stageFeedback.classList.remove('d-none'); // show feedback
+    isValid = false;
+  } else {
+    input.classList.remove('is-invalid');
+    input.classList.add('is-valid');
+    stageFeedback.classList.add('d-none'); // hide feedback
+  }
+  break;
+
+
+     case 'title':
+  const words = val.trim().split(/\s+/);
+  const firstWord = words[0] || '';
+  const isCapitalized = firstWord.charAt(0) === firstWord.charAt(0).toUpperCase();
+  const validTitle = isCapitalized && words.length <= 2;
+
+  input.classList.add(validTitle ? 'is-valid' : 'is-invalid');
+  if (!validTitle) isValid = false;
+  break;
+
+
+    }
+  });
+
+  return isValid;
+}
+function toggleSelection(button, field) {
+  const value = button.innerText;
+  const hiddenInput = document.getElementById(field);
+  const selectedDisplay = document.getElementById(`${field}-selected`);
+  const isMultiSelect = field === 'category'; // Add more multi-select fields here if needed
+
+  let selected = hiddenInput.value ? hiddenInput.value.split(',') : [];
+
+  if (isMultiSelect) {
+    if (selected.includes(value)) {
+      selected = selected.filter(v => v !== value);
+      button.classList.remove('active');
+    } else {
+      selected.push(value);
+      button.classList.add('active');
+    }
+  } else {
+    // Single-select: clear all buttons
+    const buttons = button.parentElement.querySelectorAll('button');
+    buttons.forEach(btn => btn.classList.remove('active'));
+    selected = [value];
+    button.classList.add('active');
+
+    if (field === 'stage') {
+  const stageFeedback = document.getElementById('stage-feedback');
+  hiddenInput.classList.remove('is-invalid');
+  hiddenInput.classList.add('is-valid');
+  stageFeedback.classList.add('d-none');
+}
+
+  }
+
+  hiddenInput.value = selected.join(',');
+  selectedDisplay.innerText = selected.join(', ');
+}
+
+
+function addField(containerId, nameAttr) {
+  const container = document.getElementById(containerId);
+  const input = document.createElement('input');
+  input.type = 'url';
+  input.name = nameAttr;
+  input.className = 'form-control mb-2 bg-transparent text-white';
+  input.placeholder = 'https://www.linkedin.com/in/example';
+  container.appendChild(input);
+}
+
+function addFileField() {
+  const container = document.getElementById('other-files');
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.name = 'other_files[]';
+  input.className = 'form-control mb-2 bg-transparent text-white';
+  container.appendChild(input);
+}
+
+(() => {
+  'use strict';
+  const forms = document.querySelectorAll('form');
+  Array.from(forms).forEach(form => {
+    form.addEventListener('submit', event => {
+      let isValid = true;
+
+      // Validate funding section (your existing validateFields function)
+      const finalSectionValid = validateFields('funding');
+      if (!finalSectionValid) isValid = false;
+
+      // Manual check for stage field (required hidden input)
+      const stageInput = document.getElementById('stage');
+      const stageFeedback = document.getElementById('stage-feedback');
+      if (!stageInput.value) {
+        stageInput.classList.add('is-invalid');
+        stageInput.classList.remove('is-valid');
+        stageFeedback.classList.remove('d-none');
+        isValid = false;
+      } else {
+        stageInput.classList.remove('is-invalid');
+        stageInput.classList.add('is-valid');
+        stageFeedback.classList.add('d-none');
+      }
+
+      // Validate patent section manually
+      const checkbox = document.getElementById('patentCheck');
+      const patentUpload = document.getElementById('patentUpload');
+
+      if (checkbox.checked) {
+        if (!patentUpload.files || patentUpload.files.length === 0) {
+          patentUpload.classList.add('is-invalid');
+          patentUpload.classList.remove('is-valid');
+          isValid = false;
+        } else {
+          patentUpload.classList.remove('is-invalid');
+          patentUpload.classList.add('is-valid');
+        }
+      } else {
+        patentUpload.classList.remove('is-invalid', 'is-valid');
+      }
+
+      // Check default browser validation + custom validations combined
+      if (!form.checkValidity() || !isValid) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+
+      form.classList.add('was-validated');
+    }, false);
+  });
+})();
+
+
+const tagInput = document.getElementById('tag-input');
+  const tagList = document.getElementById('tag-list');
+  const tagsHiddenInput = document.getElementById('tags');
+  let tags = [];
+
+  function addTag() {
+    const newTag = tagInput.value.trim();
+
+    if (newTag && !tags.includes(newTag)) {
+      tags.push(newTag);
+      renderTags();
+      tagInput.value = '';
+      tagsHiddenInput.value = tags.join(',');
+      tagsHiddenInput.classList.remove('is-invalid');
+      tagsHiddenInput.classList.add('is-valid');
+    }
+  }
+
+  function removeTag(index) {
+    tags.splice(index, 1);
+    renderTags();
+    tagsHiddenInput.value = tags.join(',');
+  }
+
+  function renderTags() {
+    tagList.innerHTML = '';
+    tags.forEach((tag, index) => {
+      const tagEl = document.createElement('span');
+      tagEl.className = 'badge bg-primary';
+      tagEl.innerHTML = `${tag} <button type="button" class="btn-close btn-close-white btn-sm ms-2" onclick="removeTag(${index})"></button>`;
+      tagList.appendChild(tagEl);
+    });
+  }
+  function capitalizeFirstWord(input) {
+  const cursorPos = input.selectionStart; // Save cursor position
+  const val = input.value;
+  const words = val.trimStart().split(/\s+/);
+
+  if (words.length > 0 && words[0]) {
+    words[0] = words[0][0].toUpperCase() + words[0].slice(1);
+  }
+
+  // Only capitalize first word, keep rest unchanged
+  const firstSpaceIndex = val.indexOf(' ');
+  const rest = firstSpaceIndex !== -1 ? val.slice(firstSpaceIndex) : '';
+  input.value = words[0] + rest;
+
+  // Restore cursor position
+  input.setSelectionRange(cursorPos, cursorPos);
+}
+
+
+
+
+showSection('basic-info');
+</script>
+{% endblock %}

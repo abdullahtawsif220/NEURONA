@@ -1,0 +1,25 @@
+<!-- templates/admin_verify_creators.html -->
+<div class="container mt-5">
+  <h3>Pending Creator Verifications</h3>
+  <table class="table table-bordered mt-3">
+    <thead>
+      <tr>
+        <th>Name</th><th>Email</th><th>Phone</th><th>Gov ID</th><th>Reason</th><th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for creator in creators %}
+      <tr>
+        <td>{{ creator.full_name }}</td>
+        <td>{{ creator.email }}</td>
+        <td>{{ creator.phone }}</td>
+        <td>{{ creator.gov_id }}</td>
+        <td>{{ creator.verification_reason }}</td>
+        <td>
+          <a href="{{ url_for('approve_creator', user_id=creator.id) }}" class="btn btn-success btn-sm">Approve</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
