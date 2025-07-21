@@ -754,6 +754,7 @@ body {
   display: block;
 }
 
+/* creator */
 .creator-actions .nav-link,
 .investor-nav .nav-link {
   background-color: #72383D;
