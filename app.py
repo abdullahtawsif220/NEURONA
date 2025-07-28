@@ -9,13 +9,10 @@ app = Flask(__name__)
 app.secret_key = secrets.token_hex(16)
 DB_NAME = "users.db"
 
-
-
 def get_db_connection():
     conn = sqlite3.connect(DB_NAME)
     conn.row_factory = sqlite3.Row
     return conn
-
 
 def init_db():
     if not os.path.exists(DB_NAME):
@@ -32,7 +29,8 @@ def init_db():
                 full_name TEXT,
                 phone TEXT,
                 gov_id TEXT,
-                verification_reason TEXT
+                linkedin_id TEXT,
+                present_address TEXT
             )
         ''')
         admin_email = "admin@neurona.com"
@@ -115,7 +113,7 @@ def login():
                 session['email'] = user['email']
                 session['role'] = user['role']
                 session['verified'] = user['verified']
-                flash('Login successful!', 'success')
+                session['user_id'] = user['id'] # <--- ADD THIS LINE!
                 return redirect(url_for(f"{user['role']}_dashboard"))
             else:
                 flash('Incorrect password.', 'danger')
@@ -137,39 +135,95 @@ def creator_dashboard():
         # Update session so you keep the verified status too
         session['verified'] = verified
         return render_template('creator_dashboard.html', username=session['username'], verified=verified)
-    #flash('Access denied. Please login as Creator.', 'danger')
+
     return redirect(url_for('login'))
 
 
 @app.route('/creator/verify', methods=['GET', 'POST'])
 def verify_creator():
     if 'role' not in session or session['role'] != 'creator':
-        flash('Access denied.', 'danger')
         return redirect(url_for('login'))
 
     if request.method == 'POST':
         full_name = request.form['full_name'].strip()
         phone = request.form['phone'].strip()
         gov_id = request.form['gov_id'].strip()
-        reason = request.form['reason'].strip()
+        linkedin_id = request.form['linkedin_id'].strip()
+        present_address = request.form['present_address'].strip()
 
         conn = get_db_connection()
+
+        # --- NEW LOGIC START ---
+        # Fetch the current verified status of the user
+        current_user = conn.execute("SELECT verified FROM users WHERE email = ?", (session['email'],)).fetchone()
+
+        # If the user was previously declined (verified = 2),
+        # set their status back to pending (0) upon re-submission.
+        # Otherwise, keep it as it was (likely 0 if initial submission).
+        new_verified_status = 0  # Default to pending upon submission
+        if current_user and current_user['verified'] == 1:
+            # If they were already verified, don't change it to pending
+            new_verified_status = 1
+        # --- NEW LOGIC END ---
+
         conn.execute('''
-            UPDATE users SET full_name=?, phone=?, gov_id=?, verification_reason=?
+            UPDATE users SET full_name=?, phone=?, gov_id=?, linkedin_id=?, present_address=?, verified=?
             WHERE email=?
-        ''', (full_name, phone, gov_id, reason, session['email']))
+        ''', (full_name, phone, gov_id, linkedin_id, present_address, new_verified_status, session['email']))
         conn.commit()
         conn.close()
 
         flash('Verification request submitted. Wait for admin approval.', 'info')
+        # Update the session with the new status immediately
+        session['verified'] = new_verified_status
         return redirect(url_for('creator_dashboard'))
 
     return render_template('verify_creator.html', email=session['email'])
 
+
+@app.route('/investor/verify', methods=['GET', 'POST'])
+def verify_investor():
+    if 'role' not in session or session['role'] != 'investor':
+        return redirect(url_for('login'))
+
+    if request.method == 'POST':
+        full_name = request.form['full_name'].strip()
+        phone = request.form['phone'].strip()
+        gov_id = request.form['gov_id'].strip()
+        linkedin_id = request.form['linkedin_id'].strip()
+        present_address = request.form['present_address'].strip()
+
+        conn = get_db_connection()
+
+        # Fetch the current verified status of the user
+        current_user = conn.execute("SELECT verified FROM users WHERE email = ?", (session['email'],)).fetchone()
+
+        # If the user was previously declined (verified = 2),
+        # set their status back to pending (0) upon re-submission.
+        # Otherwise, keep it as it was (likely 0 if initial submission).
+        new_verified_status = 0  # Default to pending upon submission
+        if current_user and current_user['verified'] == 1:
+            # If they were already verified, don't change it to pending
+            new_verified_status = 1
+        # --- NEW LOGIC END ---
+
+        conn.execute('''
+           UPDATE users SET full_name=?, phone=?, gov_id=?, linkedin_id=?, present_address=?, verified=?
+           WHERE email=?
+            ''', (full_name, phone, gov_id, linkedin_id, present_address, new_verified_status, session['email']))
+        conn.commit()
+        conn.close()
+
+        flash('Verification request submitted. Wait for admin approval.', 'info')
+        # Update the session with the new status immediately
+        session['verified'] = new_verified_status
+        return redirect(url_for('investor_dashboard'))
+
+    return render_template('verify_investor.html', email=session['email'])
+
 @app.route('/creator/upload_idea')
 def upload_idea():
     if 'role' not in session or session['role'] != 'creator':
-        flash('Access denied.', 'danger')
         return redirect(url_for('login'))
 
     conn = get_db_connection()
@@ -183,30 +237,8 @@ def upload_idea():
         return redirect(url_for('verify_creator'))
 
 
-@app.route('/investor/verify', methods=['GET', 'POST'])
-def verify_investor():
-    if 'role' not in session or session['role'] != 'investor':
-        flash('Access denied.', 'danger')
-        return redirect(url_for('login'))
 
-    if request.method == 'POST':
-        full_name = request.form['full_name'].strip()
-        phone = request.form['phone'].strip()
-        gov_id = request.form['gov_id'].strip()
-        reason = request.form['reason'].strip()
 
-        conn = get_db_connection()
-        conn.execute('''
-            UPDATE users SET full_name=?, phone=?, gov_id=?, verification_reason=?
-            WHERE email=?
-        ''', (full_name, phone, gov_id, reason, session['email']))
-        conn.commit()
-        conn.close()
-
-        flash('Verification request submitted. Wait for admin approval.', 'info')
-        return redirect(url_for('investor_dashboard'))
-
-    return render_template('verify_investor.html', email=session['email'])
 
 @app.route('/investor_dashboard')
 def investor_dashboard():
@@ -218,27 +250,75 @@ def investor_dashboard():
         # Update session so you keep the verified status too
         session['verified'] = verified
         return render_template('investor_dashboard.html', username=session['username'], verified=verified)
-    #flash('Access denied. Please login as Investor.', 'danger')
     return redirect(url_for('login'))
+
 
 
 @app.route('/admin_dashboard')
 def admin_dashboard():
-    if session.get('role') != 'admin':
-        #flash('Access denied. Please login as Admin.', 'danger')
+    if 'user_id' not in session or session.get('role') != 'admin':
         return redirect(url_for('login'))
     return render_template('admin_dashboard.html', username=session.get('username'))
+
+
+# New route for user management
+@app.route('/user_management')
+def user_management():
+    if 'user_id' not in session or session.get('role') != 'admin':
+        return redirect(url_for('login'))
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT COUNT(*) FROM users WHERE role = 'creator'")
+    total_creators = cursor.fetchone()[0]
+    cursor.execute("SELECT COUNT(*) FROM users WHERE role = 'investor'")
+    total_investors = cursor.fetchone()[0]
+    # Select all relevant fields for display in the table
+    cursor.execute("SELECT id, username, email, role, verified, full_name, phone, gov_id, linkedin_id, present_address FROM users WHERE role IN ('creator', 'investor')")
+    all_users = cursor.fetchall()
+    conn.close()
+
+    return render_template('user_management.html', username=session.get('username'), total_creators=total_creators,
+                           total_investors=total_investors, all_users=all_users)
+
+
+# Delete a user
+@app.route('/delete_user/<int:user_id>')
+def delete_user(user_id):
+    if 'user_id' not in session or session.get('role') != 'admin':
+        return redirect(url_for('login'))
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM users WHERE id = ?", (user_id,))
+    conn.commit()
+    conn.close()
+    flash("User deleted successfully.", "success")
+    return redirect(url_for('admin_dashboard'))
+
+# Unverify a verified user
+@app.route('/unverify_user/<int:user_id>/<role>')
+def unverify_user(user_id, role):
+    if 'user_id' not in session or session.get('role') != 'admin':
+        return redirect(url_for('login'))
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("UPDATE users SET verified = 0 WHERE id = ? AND role = ?", (user_id, role))
+    conn.commit()
+    conn.close()
+    return redirect(url_for('admin_dashboard'))
 
 
 @app.route('/admin/verify_creators')
 def verify_creators():
     if session.get('role') != 'admin':
-        flash('Access denied.', 'danger')
         return redirect(url_for('login'))
 
     conn = get_db_connection()
     creators = conn.execute(
-        "SELECT id, username, email, full_name, phone, gov_id, verification_reason FROM users WHERE role='creator' AND verified=0"
+        "SELECT id, username, email, full_name, phone, gov_id, linkedin_id, present_address FROM users WHERE role='creator' AND verified=0"
     ).fetchall()
     conn.close()
     return render_template('admin_verify_creator.html', creators=creators)
@@ -246,12 +326,11 @@ def verify_creators():
 @app.route('/admin/verify_investors')
 def verify_investors():
     if session.get('role') != 'admin':
-        flash('Access denied.', 'danger')
         return redirect(url_for('login'))
 
     conn = get_db_connection()
     investors = conn.execute(
-        "SELECT id, username, email, full_name, phone, gov_id, verification_reason FROM users WHERE role='investor' AND verified=0"
+        "SELECT id, username, email, full_name, phone, gov_id, linkedin_id, present_address FROM users WHERE role='investor' AND verified=0"
     ).fetchall()
     conn.close()
     return render_template('admin_verify_investor.html', investors=investors)
@@ -261,35 +340,59 @@ def verify_investors():
 @app.route('/admin/approve_creator/<int:user_id>')
 def approve_creator(user_id):
     if session.get('role') != 'admin':
-       # flash('Access denied.', 'danger')
         return redirect(url_for('login'))
 
     conn = get_db_connection()
     conn.execute("UPDATE users SET verified=1 WHERE id=?", (user_id,))
     conn.commit()
     conn.close()
-   # flash('Creator approved and verified.', 'success')
-    return redirect(url_for('verify_creators'))
+    return redirect(url_for('admin_dashboard'))
 
 @app.route('/admin/approve_investor/<int:user_id>')
 def approve_investor(user_id):
     if session.get('role') != 'admin':
-        #flash('Access denied.', 'danger')
         return redirect(url_for('login'))
 
     conn = get_db_connection()
     conn.execute("UPDATE users SET verified=1 WHERE id=?", (user_id,))
     conn.commit()
     conn.close()
-    #flash('Investor approved and verified.', 'success')
+    return redirect(url_for('admin_dashboard'))
+
+@app.route('/decline_creator/<int:user_id>')
+def decline_creator(user_id):
+    # Ensure only admins can perform this action
+    if 'user_id' not in session or session.get('role') != 'admin':
+        flash('Unauthorized access.', 'danger')
+        return redirect(url_for('login'))
+
+    conn = get_db_connection()
+    # Set verified to 2 to indicate a declined status, so it no longer appears as 'pending' (0)
+    conn.execute('UPDATE users SET verified = 2 WHERE id = ?', (user_id,))
+    conn.commit()
+    conn.close()
+    flash('Verification request declined.', 'info')
+    # It's better to redirect back to the page showing pending creators to see the updated list
+    return redirect(url_for('verify_creators'))
+
+
+@app.route('/decline_investor/<int:user_id>')
+def decline_investor(user_id):
+    # Ensure only admins can perform this action
+    if 'user_id' not in session or session.get('role') != 'admin':
+        flash('Unauthorized access.', 'danger')
+        return redirect(url_for('login'))
+
+    conn = get_db_connection()
+    # Set verified to 2 to indicate a declined status, so it no longer appears as 'pending' (0)
+    conn.execute('UPDATE users SET verified = 2 WHERE id = ?', (user_id,))
+    conn.commit()
+    conn.close()
+    flash('Verification request declined.', 'info')
+    # It's better to redirect back to the page showing pending investors to see the updated list
     return redirect(url_for('verify_investors'))
 
 
-@app.route('/logout')
-def logout():
-    session.clear()
-    flash('You have been logged out.', 'success')
-    return redirect(url_for('login'))
 
 @app.route('/submit_idea', methods=['GET', 'POST'])
 def submit_idea():
@@ -331,6 +434,30 @@ def submit_idea():
 
     return render_template('submit_idea.html')
 
+
+@app.route("/privacy-policy")
+def privacy_policy():
+    return render_template("privacy_policy.html")
+
+@app.route("/terms-of-service")
+def terms_of_service():
+    return render_template("terms_of_service.html")
+
+@app.route("/about_us")
+def about_us():
+    return render_template("about_us.html")
+
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    flash('You have been logged out.', 'success')
+    return redirect(url_for('login'))
+
+
+@app.route("/contact-us")
+def contact_us():
+    return render_template("contact_us.html")
 
 if __name__ == '__main__':
     init_db()
