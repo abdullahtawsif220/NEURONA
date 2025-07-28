@@ -53,9 +53,7 @@
               <h3 class="section-subtitle">Who We Are</h3>
               <h2 class="about-title">Connecting visionaries with <span class="gradient-text">innovative solutions</span></h2>
               <p class="about-description">
-                We generate value for our community by connecting top-tier creators with forward-thinking investors, 
-                leveraging our extensive network to access compelling opportunities, and by creating customized 
-                solutions to meet our users' objectives.
+                We connect top-tier creators with forward-thinking investors through our extensive network, creating customized solutions and access to compelling opportunities that generate value for our community.
               </p>
               <a href="{{ url_for('register') }}" class="btn-explore">Explore Neurona →</a>
             </div>
@@ -96,10 +94,10 @@
       <div class="footer-right">
         <h5>Useful Links</h5>
         <ul class="footer-links">
-          <li><a href="#">Terms of Service</a></li>
-          <li><a href="#">Privacy Policy</a></li>
-          <li><a href="#">Disclaimer</a></li>
-          <li><a href="#">Contact Us</a></li>
+           <li><a href="{{ url_for('terms_of_service') }}">Terms of Service</a></li>
+           <li><a href="{{ url_for('privacy_policy') }}">Privacy Policy</a></li>
+           <li><a href="{{ url_for('about_us') }}">About Us</a></li>
+          <li><a href="{{ url_for('contact_us') }}">Contact Us</a></li>
         </ul>
         <div class="footer-social">
           <a href="#"><i class="bi bi-facebook"></i></a>
