@@ -105,9 +105,9 @@
       <section id="funding" class="d-none">
 
         <div class="mb-3">
-          <label for="funding_needed" class="form-label text-white">Ask Price(Taka)</label>
+          <label for="funding_needed" class="form-label text-white">Ask Price(BDT)</label>
           <input name="funding_needed" id="funding_needed" type="number" class="form-control bg-transparent text-white" placeholder="Amount Needed ($)*" min="100" required>
-          <div class="invalid-feedback">Please enter a valid amount greater than or equal to $100.</div>
+          <div class="invalid-feedback">Please enter a valid amount greater than or equal to 10000BDT.</div>
         </div>
 
   <div class="mb-3">
@@ -262,7 +262,7 @@ function validateFields(sectionId) {
         break;
       case 'funding_needed':
         const amount = parseFloat(val);
-        if (!(amount >= 100)) {
+        if (!(amount >= 10000)) {
           input.classList.add('is-invalid');
           isValid = false;
         } else {
@@ -509,9 +509,6 @@ const tagInput = document.getElementById('tag-input');
   // Restore cursor position
   input.setSelectionRange(cursorPos, cursorPos);
 }
-
-
-
 
 showSection('basic-info');
 </script>
