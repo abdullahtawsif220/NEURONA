@@ -47,7 +47,7 @@
     <div class="mb-3">
       <label for="gov_id" class="form-label">National ID Number</label>
       <input type="text" class="form-control" id="gov_id" name="gov_id" required />
-      <div id="gov-feedback" class="invalid-feedback d-none">Only accepting Bangladesh National ID Number</div>
+      <div id="gov-feedback" class="invalid-feedback d-none">Only accepting Bangladesh National ID Number(17 digits)</div>
     </div>
 
     <div class="mb-3">
@@ -57,8 +57,8 @@
     </div>
 
     <div class="mb-3">
-      <label for="reason" class="form-label">Your present address</label>
-      <textarea class="form-control" id="reason" name="reason" rows="3" required></textarea>
+      <label for="present_address" class="form-label">Your present address</label>
+      <textarea class="form-control" id="present_address" name="present_address" rows="3" required></textarea>
       <div id="address-feedback" class="invalid-feedback d-none">Address cannot be empty.</div>
     </div>
 
@@ -146,7 +146,7 @@
     }
 
     // Address
-    const addressInput = document.getElementById('reason');
+    const addressInput = document.getElementById('present_address');
     const addressFeedback = document.getElementById('address-feedback');
     if (addressInput.value.trim() === "") {
       addressInput.classList.add('is-invalid');
