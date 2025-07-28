@@ -55,8 +55,23 @@
     </div>
 
     <div class="mb-3">
-      <label for="reason" class="form-label">Your present address</label>
-      <textarea class="form-control" id="reason" name="reason" rows="3" required></textarea>
+    <label for="mandatory_doc" class="form-label">Upload Bank Statement or Previous Investment Record <span class="text-danger">*</span></label>
+    <input type="file" class="form-control" id="mandatory_doc" name="mandatory_doc" accept=".pdf,.jpg,.jpeg,.png" required />
+    <div class="invalid-feedback">This document is required (PDF/JPG/PNG).</div>
+  </div>
+    <div id="file-alert" class="alert alert-danger d-none" role="alert">
+  Bank Statement or Investment Record is required.
+</div>
+
+
+  <div class="mb-3">
+    <label for="optional_doc" class="form-label">Upload Additional Supporting Document (Optional)</label>
+    <input type="file" class="form-control" id="optional_doc" name="optional_doc" accept=".pdf,.jpg,.jpeg,.png" />
+  </div>
+
+    <div class="mb-3">
+      <label for="present_address" class="form-label">Your present address</label>
+      <textarea class="form-control" id="present_address" name="present_address" rows="3" required></textarea>
       <div id="address-feedback" class="invalid-feedback d-none">Address cannot be empty.</div>
     </div>
 
@@ -142,8 +157,21 @@
       linkedinFeedback.classList.add('d-none');
     }
 
+// File upload validation
+const mandatoryDocInput = document.getElementById('mandatory_doc');
+const fileAlert = document.getElementById('file-alert');
+
+if (!mandatoryDocInput.value) {
+  mandatoryDocInput.classList.add('is-invalid');
+  fileAlert.classList.remove('d-none'); // show alert
+  isValid = false;
+} else {
+  mandatoryDocInput.classList.remove('is-invalid');
+  fileAlert.classList.add('d-none'); // hide alert if okay
+}
+
     // Address
-    const addressInput = document.getElementById('reason');
+    const addressInput = document.getElementById('present_address');
     const addressFeedback = document.getElementById('address-feedback');
     if (addressInput.value.trim() === "") {
       addressInput.classList.add('is-invalid');
