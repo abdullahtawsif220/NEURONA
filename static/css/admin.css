@@ -1,524 +1,233 @@
-body {
-  font-family: 'Poppins', sans-serif;
-  background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
-  color: #ffffff;
-  margin: 0;
-  padding: 0;
-  overflow-x: hidden;
-}
-
-.wrapper {
-  display: flex;
-  width: 100%;
-  align-items: stretch;
-  min-height: 100vh;
-}
-
-/* Sidebar Styles */
-#sidebar {
-  min-width: 280px;
-  max-width: 280px;
-  background: linear-gradient(180deg, #000000 0%, #1a1a1a 100%);
-  color: #ffffff;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
-  z-index: 1000;
-}
-
-#sidebar.active {
-  margin-left: -280px;
-}
-
-.sidebar-header {
-  padding: 25px 20px;
-  background: linear-gradient(135deg, #A68B5C 0%, #8B7355 100%);
-  text-align: center;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  position: relative;
-}
-
-.sidebar-logo {
-  height: 40px;
-  width: auto;
-  margin-bottom: 10px;
-  filter: brightness(1.2);
-}
-
-.sidebar-header h3 {
-  color: #ffffff;
-  font-weight: 600;
-  font-size: 1.2rem;
-  margin: 0;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-}
-
-#sidebar ul.components {
-  padding: 20px 0;
-}
-
-#sidebar ul li {
-  padding: 0;
-  margin: 5px 15px;
-  border-radius: 8px;
-  transition: all 0.3s ease;
-}
-
-#sidebar ul li a {
-  color: #cccccc;
-  text-decoration: none;
-  display: flex;
-  align-items: center;
-  padding: 15px 20px;
-  font-weight: 500;
-  font-size: 14px;
-  border-radius: 8px;
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-}
-
-#sidebar ul li a::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(166, 139, 92, 0.1), transparent);
-  transition: left 0.5s;
-}
-
-#sidebar ul li a:hover::before {
-  left: 100%;
-}
-
-#sidebar ul li a:hover {
-  color: #ffffff;
-  background: rgba(166, 139, 92, 0.15);
-  transform: translateX(5px);
-  box-shadow: 0 4px 15px rgba(166, 139, 92, 0.2);
-}
-
-#sidebar ul li.active > a {
-  background: linear-gradient(135deg, #A68B5C 0%, #8B7355 100%);
-  color: #ffffff;
-  font-weight: 600;
-  box-shadow: 0 4px 15px rgba(166, 139, 92, 0.3);
-}
-
-.sidebar-divider {
-  height: 1px;
-  background: rgba(255, 255, 255, 0.1);
-  margin: 20px 15px;
-}
-
-.logout-link {
-  color: #ff6b6b !important;
-}
-
-.logout-link:hover {
-  background: rgba(255, 107, 107, 0.15) !important;
-  color: #ff5252 !important;
-}
-
-/* Content Area */
-#content {
-  width: 100%;
-  min-height: 100vh;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-}
-
-#content.active {
-  margin-left: 0;
-}
-
-/* Top Navbar */
-.top-navbar {
-  background: rgba(0, 0, 0, 0.9);
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 0;
-  position: sticky;
-  top: 0;
-  z-index: 999;
-}
-
-.navbar-content {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px 30px;
-}
-
-.navbar-left {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-}
-
-.sidebar-toggle {
-  background: linear-gradient(135deg, #A68B5C 0%, #8B7355 100%);
-  border: none;
-  color: #ffffff;
-  width: 45px;
-  height: 45px;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(166, 139, 92, 0.3);
-}
-
-.sidebar-toggle:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(166, 139, 92, 0.4);
-}
-
-.page-title h4 {
-  color: #ffffff;
-  font-weight: 600;
-  margin: 0;
-}
-
-.page-title small {
-  color: #cccccc;
-  font-size: 13px;
-}
-
-.navbar-right {
-  display: flex;
-  align-items: center;
-}
-
-.admin-profile {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  padding: 10px 20px;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 50px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.profile-info {
-  text-align: right;
-}
-
-.admin-name {
-  display: block;
-  color: #ffffff;
-  font-weight: 600;
-  font-size: 14px;
-}
-
-.admin-role {
-  color: #A68B5C;
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.profile-avatar {
-  width: 40px;
-  height: 40px;
-  background: linear-gradient(135deg, #A68B5C 0%, #8B7355 100%);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #ffffff;
-  font-size: 16px;
-}
-
-/* Main Content */
-.main-content {
-  padding: 30px;
-}
-
-/* Stats Cards */
-.stats-card {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 16px;
-  padding: 25px;
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-  opacity: 0;
-  transform: translateY(20px);
-}
-
-.stats-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, #A68B5C, #8B7355);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.stats-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
-  border-color: rgba(166, 139, 92, 0.3);
-}
-
-.stats-card:hover::before {
-  opacity: 1;
-}
-
-.stats-card {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-}
-
-.stats-icon {
-  width: 60px;
-  height: 60px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 24px;
-  color: #ffffff;
-  flex-shrink: 0;
-}
-
-.stats-icon.bg-primary {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-}
-
-.stats-icon.bg-warning {
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-}
-
-.stats-icon.bg-success {
-  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-}
-
-.stats-icon.bg-info {
-  background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-}
-
-.stats-content {
-  flex: 1;
-}
-
-.stats-number {
-  font-size: 2rem;
-  font-weight: 700;
-  color: #ffffff;
-  margin: 0 0 5px 0;
-  line-height: 1;
-}
-
-.stats-label {
-  color: #cccccc;
-  font-size: 14px;
-  margin: 0 0 10px 0;
-  font-weight: 500;
-}
-
-.stats-trend {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 12px;
-  font-weight: 600;
-}
-
-/* Content Cards */
-.content-card {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 16px;
-  overflow: hidden;
-  transition: all 0.3s ease;
-}
-
-.content-card:hover {
-  border-color: rgba(166, 139, 92, 0.3);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-}
-
-.card-header {
-  padding: 20px 25px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.card-title {
-  color: #ffffff;
-  font-weight: 600;
-  font-size: 16px;
-  margin: 0;
-}
-
-.card-body {
-  padding: 25px;
-}
-
-/* Activity List */
-.activity-list {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.activity-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 15px;
-}
-
-.activity-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
-  color: #ffffff;
-  flex-shrink: 0;
-}
-
-.activity-content {
-  flex: 1;
-}
-
-.activity-text {
-  color: #ffffff;
-  margin: 0 0 5px 0;
-  font-size: 14px;
-  line-height: 1.4;
-}
-
-.activity-time {
-  color: #999999;
-  font-size: 12px;
-}
-
-/* Quick Actions */
-.quick-actions {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.quick-action-btn {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 15px 20px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 10px;
-  color: #ffffff;
-  text-decoration: none;
-  font-weight: 500;
-  font-size: 14px;
-  transition: all 0.3s ease;
-}
-
-.quick-action-btn:hover {
-  background: rgba(166, 139, 92, 0.15);
-  border-color: rgba(166, 139, 92, 0.3);
-  color: #ffffff;
-  transform: translateX(5px);
-}
-
-.quick-action-btn i {
-  width: 20px;
-  text-align: center;
-  color: #A68B5C;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-  #sidebar {
-    margin-left: -280px;
-  }
-  
-  #sidebar.active {
-    margin-left: 0;
-  }
-  
-  .navbar-content {
-    padding: 15px 20px;
-  }
-  
-  .navbar-left {
-    gap: 15px;
-  }
-  
-  .main-content {
-    padding: 20px 15px;
-  }
-  
-  .admin-profile {
-    padding: 8px 15px;
-  }
-  
-  .profile-info {
-    display: none;
-  }
-  
-  .stats-card {
-    flex-direction: column;
-    text-align: center;
-    gap: 15px;
-  }
-  
-  .activity-item {
-    flex-direction: column;
-    gap: 10px;
-  }
-}
-
-@media (max-width: 576px) {
-  .page-title h4 {
-    font-size: 18px;
-  }
-  
-  .stats-number {
-    font-size: 1.5rem;
-  }
-  
-  .sidebar-toggle {
-    width: 40px;
-    height: 40px;
-    font-size: 14px;
-  }
-}
-
-/* Custom Scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.1);
-}
-
-::-webkit-scrollbar-thumb {
-  background: rgba(166, 139, 92, 0.5);
-  border-radius: 3px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(166, 139, 92, 0.7);
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Dashboard – Neurona</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+  <div class="wrapper">
+    <!-- Sidebar -->
+    <nav id="sidebar">
+      <div class="sidebar-header">
+        <img src="{{ url_for('static', filename='images/logo_white.png') }}" alt="Neurona Logo" class="sidebar-logo">
+        <h3>Admin Panel</h3>
+      </div>
+      <ul class="list-unstyled components">
+        <li class="active">
+          <a href="#"><i class="fas fa-tachometer-alt me-2"></i>Dashboard</a>
+        </li>
+        <li>
+          <a href="{{ url_for('user_management') }}"><i class="fas fa-users me-2"></i>Manage Users</a>
+        </li>
+        <li>
+          <a href="{{ url_for('verify_creators') }}"><i class="fas fa-user-check me-2"></i>Verify Creators</a>
+        </li>
+        <li>
+          <a href="{{ url_for('verify_investors') }}"><i class="fas fa-user-shield me-2"></i>Verify Investors</a>
+        </li>
+        <li class="sidebar-divider"></li>
+        <li>
+          <a href="{{ url_for('logout') }}" class="logout-link"><i class="fas fa-sign-out-alt me-2"></i>Logout</a>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- Page Content -->
+    <div id="content">
+      <!-- Top Navbar -->
+      <nav class="top-navbar">
+        <div class="navbar-content">
+          <div class="navbar-left">
+            <button type="button" id="sidebarCollapse" class="sidebar-toggle">
+              <i class="fas fa-bars"></i>
+            </button>
+            <div class="page-title">
+              <h4 class="mb-0">Dashboard Overview</h4>
+              <small class="text-muted">Welcome back, manage your platform</small>
+            </div>
+          </div>
+          <div class="navbar-right">
+            <div class="admin-profile">
+              <div class="profile-info">
+                <span class="admin-name">{{ username }}</span>
+                <small class="admin-role">Administrator</small>
+              </div>
+              <div class="profile-avatar">
+                <i class="fas fa-user-shield"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      <!-- Main Content -->
+      <div class="main-content">
+        <!-- Stats Cards -->
+        <div class="row g-4 mb-4">
+          <div class="col-xl-3 col-md-6">
+            <div class="stats-card">
+              <div class="stats-icon bg-primary">
+                <i class="fas fa-users"></i>
+              </div>
+              <div class="stats-content">
+                <h3 class="stats-number">258</h3>
+                <p class="stats-label">Total Users</p>
+                <div class="stats-trend">
+                  <i class="fas fa-arrow-up text-success"></i>
+                  <span class="text-success">+12%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-xl-3 col-md-6">
+            <div class="stats-card">
+              <div class="stats-icon bg-warning">
+                <i class="fas fa-clock"></i>
+              </div>
+              <div class="stats-content">
+                <h3 class="stats-number">32</h3>
+                <p class="stats-label">Pending Verifications</p>
+                <div class="stats-trend">
+                  <i class="fas fa-arrow-down text-danger"></i>
+                  <span class="text-danger">-5%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-xl-3 col-md-6">
+            <div class="stats-card">
+              <div class="stats-icon bg-success">
+                <i class="fas fa-dollar-sign"></i>
+              </div>
+              <div class="stats-content">
+                <h3 class="stats-number">$8,940</h3>
+                <p class="stats-label">Total Revenue</p>
+                <div class="stats-trend">
+                  <i class="fas fa-arrow-up text-success"></i>
+                  <span class="text-success">+18%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-xl-3 col-md-6">
+            <div class="stats-card">
+              <div class="stats-icon bg-info">
+                <i class="fas fa-lightbulb"></i>
+              </div>
+              <div class="stats-content">
+                <h3 class="stats-number">145</h3>
+                <p class="stats-label">Active Ideas</p>
+                <div class="stats-trend">
+                  <i class="fas fa-arrow-up text-success"></i>
+                  <span class="text-success">+8%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="row g-4 mb-4">
+          <div class="col-lg-8">
+            <div class="content-card">
+              <div class="card-header">
+                <h5 class="card-title">Recent Activity</h5>
+                <div class="card-actions">
+                  <button class="btn btn-sm btn-outline-primary">View All</button>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="activity-list">
+                  <div class="activity-item">
+                    <div class="activity-icon bg-success">
+                      <i class="fas fa-user-check"></i>
+                    </div>
+                    <div class="activity-content">
+                      <p class="activity-text">New creator <strong>John Doe</strong> verified successfully</p>
+                      <small class="activity-time">2 minutes ago</small>
+                    </div>
+                  </div>
+                  <div class="activity-item">
+                    <div class="activity-icon bg-primary">
+                      <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <div class="activity-content">
+                      <p class="activity-text">New idea submitted: <strong>AI-Powered Healthcare</strong></p>
+                      <small class="activity-time">15 minutes ago</small>
+                    </div>
+                  </div>
+                  <div class="activity-item">
+                    <div class="activity-icon bg-warning">
+                      <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <div class="activity-content">
+                      <p class="activity-text">Verification pending for <strong>Sarah Wilson</strong></p>
+                      <small class="activity-time">1 hour ago</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-lg-4">
+            <div class="content-card">
+              <div class="card-header">
+                <h5 class="card-title">Quick Actions</h5>
+              </div>
+              <div class="card-body">
+                <div class="quick-actions">
+                  <a href="{{ url_for('verify_creators') }}" class="quick-action-btn">
+                    <i class="fas fa-user-check"></i>
+                    <span>Verify Creators</span>
+                  </a>
+                  <a href="{{ url_for('verify_investors') }}" class="quick-action-btn">
+                    <i class="fas fa-user-shield"></i>
+                    <span>Verify Investors</span>
+                  </a>
+                  <a href="{{ url_for('user_management') }}" class="quick-action-btn">
+                    <i class="fas fa-users-cog"></i>
+                    <span>Manage Users</span>
+                  </a>
+                  <a href="#" class="quick-action-btn">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>View Reports</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    document.getElementById('sidebarCollapse').addEventListener('click', function () {
+      document.getElementById('sidebar').classList.toggle('active');
+      document.getElementById('content').classList.toggle('active');
+    });
+
+    // Add smooth transitions and interactions
+    document.addEventListener('DOMContentLoaded', function() {
+      // Animate stats cards on load
+      const statsCards = document.querySelectorAll('.stats-card');
+      statsCards.forEach((card, index) => {
+        setTimeout(() => {
+          card.style.opacity = '1';
+          card.style.transform = 'translateY(0)';
+        }, index * 100);
+      });
+    });
+  </script>
+</body>
+</html>
