@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Contact Us | Neurona</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+  <style>
+    body {
+      background: #121212;
+      color: #eee;
+      font-family: 'Poppins', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .content-container {
+      max-width: 600px; /* Made it a bit narrower for a shorter page feel */
+      margin: 6rem auto 4rem auto;
+      padding: 2.5rem;
+      background: #1e1e1e;
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+      text-align: center; /* Center content */
+    }
+    h1 {
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      color: #fff;
+    }
+    p {
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+      color: #ccc;
+      line-height: 1.7;
+    }
+    a.email-link {
+        color: #007bff; /* Bootstrap primary blue */
+        text-decoration: none;
+        font-weight: 600;
+    }
+    a.email-link:hover {
+        text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-black">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/">Neurona</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+      </div>
+    </div>
+  </nav>
+
+  <div class="container content-container shadow">
+    <h1>Contact Us</h1>
+    <p>Have questions, feedback, or need support? Reach out to us!</p>
+
+    <p>For general inquiries: <br><a href="mailto:info@neurona.com" class="email-link">info@neurona.com</a></p>
+    <p>For support: <br><a href="mailto:support@neurona.com" class="email-link">support@neurona.com</a></p>
+  </div>
+
+  <footer class="bg-black text-center text-white py-3 mt-auto">
+    <div class="container">
+      <small>&copy; 2025 Neurona. All rights reserved.</small>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Investor Dashboard – Neurona</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/investor_dashboard.css') }}"/>
+</head>
+<body>
+
+<!-- Top Navigation Bar -->
+<nav class="top-nav">
+  <div class="nav-container">
+    <div class="nav-left">
+      <img src="{{ url_for('static', filename='images/logo_white.png') }}" class="nav-logo" alt="Neurona">
+      <div class="nav-divider"></div>
+      <h1 class="nav-title">Investment Portal</h1>
+    </div>
+    
+    <div class="nav-center">
+      <div class="search-container">
+        <i class="fas fa-search search-icon"></i>
+        <input type="text" placeholder="Search ideas, categories, or creators..." class="search-input">
+      </div>
+    </div>
+    
+    <div class="nav-right">
+      <div class="nav-actions">
+        <button class="nav-btn">
+          <i class="fas fa-bell"></i>
+          <span class="notification-badge">3</span>
+        </button>
+        <button class="nav-btn">
+          <i class="fas fa-bookmark"></i>
+        </button>
+        <button class="nav-btn">
+          <i class="fas fa-chart-line"></i>
+        </button>
+      </div>
+      
+      <div class="profile-section">
+        <div class="profile-info">
+          <span class="profile-name">{{ username }}</span>
+          {% if verified %}
+            <span class="verified-badge">
+              <i class="fas fa-shield-check"></i>
+              Verified Investor
+            </span>
+          {% else %}
+            <span class="unverified-badge">
+              <i class="fas fa-exclamation-triangle"></i>
+              Pending Verification
+            </span>
+          {% endif %}
+        </div>
+        <div class="profile-dropdown">
+          <img src="{{ url_for('static', filename='images/user_logo.png') }}" alt="Profile" class="profile-avatar">
+          <div class="dropdown-menu">
+            <a href="#" class="dropdown-item">
+              <i class="fas fa-user"></i>
+              Profile Settings
+            </a>
+            <a href="#" class="dropdown-item">
+              <i class="fas fa-wallet"></i>
+              Wallet & Billing
+            </a>
+            <a href="#" class="dropdown-item">
+              <i class="fas fa-chart-bar"></i>
+              Investment History
+            </a>
+            <div class="dropdown-divider"></div>
+            <a href="{{ url_for('logout') }}" class="dropdown-item logout">
+              <i class="fas fa-sign-out-alt"></i>
+              Sign Out
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- Flash Messages -->
+<div class="container-fluid px-4 pt-3">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }} alert-dismissible fade show custom-alert" role="alert">
+          <i class="fas fa-info-circle me-2"></i>
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+</div>
+
+<!-- Main Content -->
+<div class="main-container">
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-content">
+      <div class="hero-text">
+        <h1 class="hero-title">Welcome back, {{ username }}</h1>
+        <p class="hero-subtitle">Discover your next investment opportunity</p>
+      </div>
+      
+      {% if not verified %}
+      <div class="verification-prompt">
+        <div class="verification-content">
+          <i class="fas fa-shield-alt verification-icon"></i>
+          <div>
+            <h3>Complete Your Verification</h3>
+            <p>Unlock full access to premium investment opportunities</p>
+          </div>
+          <a href="{{ url_for('verify_investor') }}" class="verify-btn">
+            Verify Now
+            <i class="fas fa-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </section>
+
+  <!-- Portfolio Overview -->
+  <section class="portfolio-section">
+    <div class="section-header">
+      <h2 class="section-title">Portfolio Overview</h2>
+      <div class="section-actions">
+        <button class="filter-btn active">All Time</button>
+        <button class="filter-btn">This Year</button>
+        <button class="filter-btn">This Month</button>
+      </div>
+    </div>
+    
+    <div class="portfolio-grid">
+      <div class="portfolio-card primary">
+        <div class="card-header">
+          <div class="card-icon">
+            <i class="fas fa-wallet"></i>
+          </div>
+          <div class="card-menu">
+            <i class="fas fa-ellipsis-h"></i>
+          </div>
+        </div>
+        <div class="card-content">
+          <h3 class="card-value">$124,500</h3>
+          <p class="card-label">Total Portfolio Value</p>
+          <div class="card-trend positive">
+            <i class="fas fa-trending-up"></i>
+            <span>+12.5% this month</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="portfolio-card secondary">
+        <div class="card-header">
+          <div class="card-icon">
+            <i class="fas fa-chart-line"></i>
+          </div>
+        </div>
+        <div class="card-content">
+          <h3 class="card-value">18</h3>
+          <p class="card-label">Active Investments</p>
+          <div class="card-trend neutral">
+            <i class="fas fa-minus"></i>
+            <span>No change</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="portfolio-card tertiary">
+        <div class="card-header">
+          <div class="card-icon">
+            <i class="fas fa-trophy"></i>
+          </div>
+        </div>
+        <div class="card-content">
+          <h3 class="card-value">89.2%</h3>
+          <p class="card-label">Success Rate</p>
+          <div class="card-trend positive">
+            <i class="fas fa-trending-up"></i>
+            <span>+2.1% this quarter</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="portfolio-card quaternary">
+        <div class="card-header">
+          <div class="card-icon">
+            <i class="fas fa-clock"></i>
+          </div>
+        </div>
+        <div class="card-content">
+          <h3 class="card-value">$45,200</h3>
+          <p class="card-label">Pending Investments</p>
+          <div class="card-trend positive">
+            <i class="fas fa-plus"></i>
+            <span>5 new opportunities</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Investment Opportunities -->
+  <section class="opportunities-section">
+    <div class="section-header">
+      <h2 class="section-title">Investment Opportunities</h2>
+      <div class="section-filters">
+        <select class="filter-select">
+          <option>All Categories</option>
+          <option>Technology</option>
+          <option>Healthcare</option>
+          <option>Finance</option>
+          <option>Education</option>
+        </select>
+        <select class="filter-select">
+          <option>All Stages</option>
+          <option>Seed</option>
+          <option>Series A</option>
+          <option>Series B</option>
+          <option>Growth</option>
+        </select>
+        <button class="view-toggle active" data-view="grid">
+          <i class="fas fa-th"></i>
+        </button>
+        <button class="view-toggle" data-view="list">
+          <i class="fas fa-list"></i>
+        </button>
+      </div>
+    </div>
+    
+    <div class="opportunities-grid" id="opportunitiesGrid">
+      {% for i in range(6) %}
+      <div class="opportunity-card">
+        <div class="opportunity-header">
+          <div class="opportunity-image">
+            <img src="{{ url_for('static', filename='images/idea.jpg') }}" alt="Opportunity">
+            <div class="opportunity-badge">Hot</div>
+          </div>
+          <button class="bookmark-btn">
+            <i class="far fa-bookmark"></i>
+          </button>
+        </div>
+        
+        <div class="opportunity-content">
+          <div class="opportunity-meta">
+            <span class="category">Technology</span>
+            <span class="stage">Series A</span>
+          </div>
+          
+          <h3 class="opportunity-title">AI-Powered Healthcare Platform {{ i+1 }}</h3>
+          <p class="opportunity-description">Revolutionary healthcare solution using artificial intelligence to improve patient outcomes and reduce costs.</p>
+          
+          <div class="opportunity-metrics">
+            <div class="metric">
+              <span class="metric-label">Seeking</span>
+              <span class="metric-value">${{ 500 + i * 100 }}K</span>
+            </div>
+            <div class="metric">
+              <span class="metric-label">Equity</span>
+              <span class="metric-value">{{ 15 + i * 2 }}%</span>
+            </div>
+            <div class="metric">
+              <span class="metric-label">Valuation</span>
+              <span class="metric-value">${{ 2 + i }}M</span>
+            </div>
+          </div>
+          
+          <div class="opportunity-progress">
+            <div class="progress-bar">
+              <div class="progress-fill" data-progress="{{ 60 + i * 5 }}"></div>
+            </div>
+            <span class="progress-text">{{ 60 + i * 5 }}% funded</span>
+          </div>
+          
+          <div class="opportunity-footer">
+            <div class="founder-info">
+              <img src="{{ url_for('static', filename='images/user_logo.png') }}" alt="Founder" class="founder-avatar">
+              <div>
+                <span class="founder-name">John Doe</span>
+                <span class="founder-title">CEO & Founder</span>
+              </div>
+            </div>
+            
+            <div class="opportunity-actions">
+              <button class="action-btn secondary">
+                <i class="fas fa-eye"></i>
+                View Details
+              </button>
+              <button class="action-btn primary">
+                <i class="fas fa-dollar-sign"></i>
+                Invest Now
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    
+    <div class="load-more-section">
+      <button class="load-more-btn">
+        Load More Opportunities
+        <i class="fas fa-chevron-down"></i>
+      </button>
+    </div>
+  </section>
+
+  <!-- Recent Activity -->
+  <section class="activity-section">
+    <div class="section-header">
+      <h2 class="section-title">Recent Activity</h2>
+      <a href="#" class="view-all-link">View All Activity</a>
+    </div>
+    
+    <div class="activity-timeline">
+      <div class="activity-item">
+        <div class="activity-icon success">
+          <i class="fas fa-check"></i>
+        </div>
+        <div class="activity-content">
+          <h4>Investment Completed</h4>
+          <p>Successfully invested $25,000 in TechStart AI</p>
+          <span class="activity-time">2 hours ago</span>
+        </div>
+      </div>
+      
+      <div class="activity-item">
+        <div class="activity-icon info">
+          <i class="fas fa-eye"></i>
+        </div>
+        <div class="activity-content">
+          <h4>New Opportunity Viewed</h4>
+          <p>Viewed details for HealthTech Solutions</p>
+          <span class="activity-time">5 hours ago</span>
+        </div>
+      </div>
+      
+      <div class="activity-item">
+        <div class="activity-icon warning">
+          <i class="fas fa-bookmark"></i>
+        </div>
+        <div class="activity-content">
+          <h4>Opportunity Bookmarked</h4>
+          <p>Saved EduPlatform for later review</p>
+          <span class="activity-time">1 day ago</span>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  // Auto-hide flash messages
+  setTimeout(function() {
+    const alerts = document.querySelectorAll(".custom-alert");
+    alerts.forEach(alert => {
+      alert.classList.remove("show");
+      alert.classList.add("fade");
+    });
+  }, 4000);
+
+  // Profile dropdown toggle
+  document.querySelector('.profile-dropdown').addEventListener('click', function() {
+    this.classList.toggle('active');
+  });
+
+  // Close dropdown when clicking outside
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('.profile-dropdown')) {
+      document.querySelector('.profile-dropdown').classList.remove('active');
+    }
+  });
+
+  // View toggle functionality
+  document.querySelectorAll('.view-toggle').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.view-toggle').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+      
+      const view = this.dataset.view;
+      const grid = document.getElementById('opportunitiesGrid');
+      
+      if (view === 'list') {
+        grid.classList.add('list-view');
+      } else {
+        grid.classList.remove('list-view');
+      }
+    });
+  });
+
+  // Filter buttons
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+    });
+  });
+
+  // Bookmark functionality
+  document.querySelectorAll('.bookmark-btn').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      const icon = this.querySelector('i');
+      if (icon.classList.contains('far')) {
+        icon.classList.remove('far');
+        icon.classList.add('fas');
+        this.classList.add('bookmarked');
+      } else {
+        icon.classList.remove('fas');
+        icon.classList.add('far');
+        this.classList.remove('bookmarked');
+      }
+    });
+  });
+
+  // Search functionality
+  document.querySelector('.search-input').addEventListener('focus', function() {
+    this.parentElement.classList.add('focused');
+  });
+
+  document.querySelector('.search-input').addEventListener('blur', function() {
+    this.parentElement.classList.remove('focused');
+  });
+</script>
+
+</body>
+</html>
