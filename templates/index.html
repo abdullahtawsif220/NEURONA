@@ -96,25 +96,25 @@
               </p>
             </div>
           </div>
-          <div class="col-lg-3 col-md-6 mb-4">
-            <div class="footer-section">
-              <h5 class="footer-title">Useful Links</h5>
-              <ul class="footer-links">
-                <li><a href="{{ url_for('terms_of_service') }}">Terms of Service</a></li>
-                <li><a href="{{ url_for('privacy_policy') }}">Privacy Policy</a></li>
-                <li><a href="{{ url_for('about_us') }}">About Us</a></li>
-                <li><a href="{{ url_for('contact_us') }}">Contact Us</a></li>
-              </ul>
-            </div>
-          </div>
-          <div class="col-lg-3 col-md-6 mb-4">
-            <div class="footer-section">
-              <h5 class="footer-title">Connect With Us</h5>
-              <div class="footer-social">
-                <a href="#" class="social-link"><i class="bi bi-facebook"></i></a>
-                <a href="#" class="social-link"><i class="bi bi-twitter"></i></a>
-                <a href="#" class="social-link"><i class="bi bi-instagram"></i></a>
-                <a href="#" class="social-link"><i class="bi bi-linkedin"></i></a>
+          <div class="col-lg-6 col-md-12 mb-4">
+            <div class="footer-right">
+              <div class="footer-section mb-3">
+                <h5 class="footer-title">Connect With Us</h5>
+                <div class="footer-social">
+                  <a href="#" class="social-link"><i class="bi bi-facebook"></i></a>
+                  <a href="#" class="social-link"><i class="bi bi-twitter"></i></a>
+                  <a href="#" class="social-link"><i class="bi bi-instagram"></i></a>
+                  <a href="#" class="social-link"><i class="bi bi-linkedin"></i></a>
+                </div>
+              </div>
+              <div class="footer-section">
+                <h5 class="footer-title">Useful Links</h5>
+                <div class="footer-links-horizontal">
+                  <a href="{{ url_for('terms_of_service') }}" class="footer-link-item">Terms of Service</a>
+                  <a href="{{ url_for('privacy_policy') }}" class="footer-link-item">Privacy Policy</a>
+                  <a href="{{ url_for('about_us') }}" class="footer-link-item">About Us</a>
+                  <a href="{{ url_for('contact_us') }}" class="footer-link-item">Contact Us</a>
+                </div>
               </div>
             </div>
           </div>
@@ -133,17 +133,23 @@
 </body>
 </html>
 
+
   <!-- JS Scripts -->
   <script>
     // Navbar scroll effect
     window.addEventListener('scroll', () => {
-      const navbar = document.querySelector('.navbar');
-      if (window.scrollY > 50) {
-        navbar.classList.add('scrolled');
-      } else {
-        navbar.classList.remove('scrolled');
-      }
-    });
+  const navbar = document.querySelector('.navbar');
+  const logo = document.querySelector('.navbar-logo');
+
+  if (window.scrollY > 50) {
+    navbar.classList.add('scrolled', 'dark');
+    navbar.classList.remove('light');
+  } else {
+    navbar.classList.remove('scrolled', 'dark');
+    navbar.classList.add('light');
+  }
+});
+
 
     // Animated counter
     function animateCounter(element) {
