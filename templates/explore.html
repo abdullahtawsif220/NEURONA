@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}Explore Opportunities{% endblock %}
+
+{% block content %}
+<section class="opportunities-section">
+  <div class="section-header">
+    <h2 class="section-title">Investment Opportunities</h2>
+  </div>
+
+  <div class="opportunities-grid">
+    {% for idea in ideas %}
+    <div class="opportunity-card">
+      <div class="opportunity-header">
+        <div class="opportunity-image">
+          <img src="{{ url_for('static', filename='uploads/' + idea['product_image']) }}" alt="Opportunity">
+          <div class="opportunity-badge">New</div>
+        </div>
+      </div>
+
+      <div class="opportunity-content">
+        <div class="opportunity-meta">
+          <span class="category">{{ idea['category'] }}</span>
+          <span class="stage">{{ idea['stage'] }}</span>
+        </div>
+
+        <h3 class="opportunity-title">{{ idea['title'] }}</h3>
+        <p class="opportunity-description">{{ idea['summary'] }}</p>
+
+        <div class="opportunity-metrics">
+          <div class="metric">
+            <span class="metric-label">Seeking</span>
+            <span class="metric-value">${{ idea['funding_needed'] | int }}K</span>
+          </div>
+          <div class="metric">
+            <span class="metric-label">Equity</span>
+            <span class="metric-value">{{ idea['equity_offered'] }}%</span>
+          </div>
+          <div class="metric">
+            <span class="metric-label">Stage</span>
+            <span class="metric-value">{{ idea['stage'] }}</span>
+          </div>
+        </div>
+
+        <div class="opportunity-footer">
+          <div class="founder-info">
+            <img src="{{ url_for('static', filename='images/user_logo.png') }}" class="founder-avatar" alt="Founder">
+            <div>
+              <span class="founder-name">{{ idea['founders'] }}</span>
+              <span class="founder-title">Founder</span>
+            </div>
+          </div>
+
+          <div class="opportunity-actions">
+            <a href="{{ url_for('product_page', idea_id=idea['id']) }}" class="action-btn secondary">
+              <i class="fas fa-eye"></i> View Details
+            </a>
+            <a href="#" class="action-btn primary">
+              <i class="fas fa-dollar-sign"></i> Invest Now
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

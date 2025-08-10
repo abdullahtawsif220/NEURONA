@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Register - Neurona</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .login-body {
+            background: linear-gradient(135deg, #0F0F0F 0%, #1a1a1a 50%, #000000 100%);
+            min-height: 100vh;
+            font-family: 'Poppins', sans-serif;
+            position: relative;
+            overflow-x: hidden;
+            padding: 0;
+            margin: 0;
+        }
+
+        .login-body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(circle at 20% 80%, rgba(129, 129, 129, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(129, 129, 129, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(255, 255, 255, 0.02) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .register-container {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: 550px;
+            margin: 0 auto;
+        }
+
+        .register-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow:
+                0 20px 40px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+            margin: 20px;
+        }
+
+        .register-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(166, 139, 92, 0.5), transparent);
+        }
+
+        .register-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .register-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #ffffff, #818181);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .register-subtitle {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+            font-weight: 400;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .form-label {
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 500;
+            font-size: 14px;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .form-control, .form-select {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            color: #ffffff;
+            padding: 14px 16px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .form-control:focus, .form-select:focus {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: #A68B5C;
+            box-shadow: 0 0 0 3px rgba(166, 139, 92, 0.1);
+            color: #ffffff;
+            outline: none;
+        }
+
+        .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .form-select option {
+            background: #1a1a1a;
+            color: #ffffff;
+        }
+
+        .register-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #818181 0%, #818181 100%);
+            border: none;
+            border-radius: 12px;
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .register-btn:disabled {
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.5);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .register-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .register-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(166, 139, 92, 0.3);
+        }
+
+        .register-btn:hover:not(:disabled)::before {
+            left: 100%;
+        }
+
+        .register-btn:active:not(:disabled) {
+            transform: translateY(0);
+        }
+
+        .register-footer {
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .register-footer p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+            margin: 0;
+        }
+
+        .register-footer a {
+            color: #cbcbcb;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .register-footer a:hover {
+            color: #ffffff;
+        }
+
+        .flash-message {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #ffffff;
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            backdrop-filter: blur(10px);
+        }
+
+        .flash-message.alert-success {
+            background: rgba(16, 185, 129, 0.1);
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+
+        .flash-message.alert-info {
+            background: rgba(59, 130, 246, 0.1);
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+
+        .hint {
+            font-size: 12px;
+            margin-top: 6px;
+            padding: 6px 10px;
+            border-radius: 6px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .hint.valid {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #10b981;
+        }
+
+        .hint.invalid {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #ef4444;
+        }
+
+        .is-valid {
+            border-color: #10b981 !important;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1) !important;
+        }
+
+        .is-invalid {
+            border-color: #ef4444 !important;
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1) !important;
+        }
+
+        @media (max-width: 576px) {
+            .register-card {
+                padding: 25px 20px;
+                margin: 15px;
+            }
+
+            .register-title {
+                font-size: 24px;
+            }
+            
+            .register-container {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body class="login-body">
+    <div class="register-container" style="min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px 0;">
+        <div class="register-card">
+            <div class="register-header">
+                <h1 class="register-title">Join Neurona</h1>
+                <p class="register-subtitle">Create your account to get started</p>
+            </div>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                {% for category, message in messages %}
+                  <div class="flash-message alert-{{ category }}">
+                      <i class="fas fa-info-circle me-2"></i>{{ message }}
+                  </div>
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
+
+            <form method="POST" action="{{ url_for('register') }}" id="registerForm">
+                <div class="form-group">
+                    <label for="username" class="form-label">Username</label>
+                    <input required type="text" class="form-control" id="username" name="username" placeholder="Choose a username" />
+                </div>
+
+                <div class="form-group">
+                    <label for="email" class="form-label">Email Address</label>
+                    <input required type="email" class="form-control" id="email" name="email" placeholder="Enter your email" />
+                    <div id="emailHint" class="hint"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password" class="form-label">Password</label>
+                    <input required type="password" class="form-control" id="password" name="password" placeholder="Create a strong password" />
+                    <div id="passwordHint" class="hint"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirm_password" class="form-label">Confirm Password</label>
+                    <input required type="password" class="form-control" id="confirm_password" name="confirm_password" placeholder="Confirm your password" />
+                    <div id="confirmHint" class="hint"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="role" class="form-label">I want to join as</label>
+                    <select class="form-select" id="role" name="role" required>
+                        <option value="">Select your role</option>
+                        <option value="creator">Creator - Share my ideas</option>
+                        <option value="investor">Investor - Fund great ideas</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="register-btn" id="submitBtn" disabled>
+                    Create Account
+                </button>
+            </form>
+
+            <div class="register-footer">
+                <p>Already have an account? <a href="{{ url_for('login') }}">Sign in here</a></p>
+            </div>
+        </div>
+    </div>
+
+<script>
+  window.setTimeout(function() {
+    const flashes = document.querySelectorAll('.flash-message');
+    flashes.forEach(flash => {
+      flash.style.transition = 'opacity 0.5s ease-out';
+      flash.style.opacity = '0';
+      setTimeout(() => flash.remove(), 500);
+    });
+  }, 2000);
+</script>
+
+<script>
+    const allowedDomains = ["gmail.com", "yahoo.com", "outlook.com", "hotmail.com", "neurona.com"];
+    const username = document.getElementById("username");
+    const email = document.getElementById("email");
+    const password = document.getElementById("password");
+    const confirm = document.getElementById("confirm_password");
+    const role = document.getElementById("role");
+    const submitBtn = document.getElementById("submitBtn");
+
+    const emailHint = document.getElementById("emailHint");
+    const passwordHint = document.getElementById("passwordHint");
+    const confirmHint = document.getElementById("confirmHint");
+
+    function validateEmail() {
+        const domain = email.value.split('@')[1];
+        if (domain && allowedDomains.includes(domain.toLowerCase())) {
+            email.classList.add('is-valid');
+            email.classList.remove('is-invalid');
+            emailHint.textContent = "✅ Allowed email domain";
+            emailHint.className = "hint valid";
+            return true;
+        } else {
+            email.classList.add('is-invalid');
+            email.classList.remove('is-valid');
+            emailHint.textContent = "❌ Use email from: " + allowedDomains.join(", ");
+            emailHint.className = "hint invalid";
+            return false;
+        }
+    }
+
+    function validatePassword() {
+        const value = password.value;
+        const isValid = value.length >= 8 && /[!@#$%^&*(),.?":{}|<>]/.test(value);
+        if (isValid) {
+            password.classList.add('is-valid');
+            password.classList.remove('is-invalid');
+            passwordHint.textContent = "✅ Strong password";
+            passwordHint.className = "hint valid";
+            return true;
+        } else {
+            password.classList.add('is-invalid');
+            password.classList.remove('is-valid');
+            passwordHint.textContent = "❌ At least 8 characters and 1 special character";
+            passwordHint.className = "hint invalid";
+            return false;
+        }
+    }
+
+    function validateConfirm() {
+        if (confirm.value === password.value && confirm.value.length > 0) {
+            confirm.classList.add('is-valid');
+            confirm.classList.remove('is-invalid');
+            confirmHint.textContent = "✅ Passwords match";
+            confirmHint.className = "hint valid";
+            return true;
+        } else {
+            confirm.classList.add('is-invalid');
+            confirm.classList.remove('is-valid');
+            confirmHint.textContent = "❌ Passwords do not match";
+            confirmHint.className = "hint invalid";
+            return false;
+        }
+    }
+
+    function validateForm() {
+        const allValid =
+            username.value.trim() !== "" &&
+            validateEmail() &&
+            validatePassword() &&
+            validateConfirm() &&
+            role.value !== "";
+
+        submitBtn.disabled = !allValid;
+    }
+
+    username.addEventListener("input", validateForm);
+    email.addEventListener("input", () => { validateEmail(); validateForm(); });
+    password.addEventListener("input", () => { validatePassword(); validateConfirm(); validateForm(); });
+    confirm.addEventListener("input", () => { validateConfirm(); validateForm(); });
+    role.addEventListener("change", validateForm);
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

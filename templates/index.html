@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Neurona</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"/>
+</head>
+
+<body>
+  <div class="main-container">
+    <!-- Navbar -->
+    <nav class="navbar">
+      <div class="logo">
+        <img src="{{ url_for('static', filename='images/logo_black.png') }}" class="navbar-logo" alt="Neurona Logo">
+      </div>
+      <ul class="nav-links">
+        <li><a href="#" class="nav-link">Home</a></li>
+        <li><a href="{{ url_for('about_us') }}" class="nav-link">About</a></li>
+        <li><a href="#" class="nav-link">Explore</a></li>
+         <li><a href="{{ url_for('contact_us') }}" class="nav-link">Contact</a></li>
+      </ul>
+      <div class="nav-actions">
+        <a href="{{ url_for('login') }}" class="nav-button">Log In</a>
+        <a href="{{ url_for('register') }}" class="nav-button filled">Sign Up</a>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero-section">
+      <div class="hero-content-container">
+        <div class="hero-left">
+          <div class="hero-cta-section">
+            <a href="{{ url_for('register') }}" class="btn-outline">Get Started</a>
+          </div>
+        </div>
+        <div class="hero-right">
+          <h1>Neurona connects <span class="gradient-text">Creators</span> & <span class="gradient-text">Investors</span></h1>
+          <p class="description">Start your journey to fund or be funded. Discover groundbreaking ideas, connect with visionary minds, and transform the future of innovation together.</p>
+        </div>
+      </div>
+    </header>
+
+    <!-- About Neurona Section 2-->
+    <section class="about-section">
+      <div class="container">
+        <div class="row align-items-center">
+          <div class="col-lg-6">
+            <div class="about-content">
+              <h3 class="section-subtitle">Who We Are</h3>
+              <h2 class="about-title">Connecting visionaries with <span class="gradient-text">innovative solutions</span></h2>
+              <p class="about-description">
+                We connect top-tier creators with forward-thinking investors through our extensive network, creating customized solutions and access to compelling opportunities that generate value for our community.
+              </p>
+              <a href="{{ url_for('register') }}" class="btn-explore">Explore Neurona →</a>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="stats-grid">
+              <div class="stat-item">
+                <div class="stat-number" data-target="1250">0</div>
+                <div class="stat-label">Active Creators</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-number" data-target="850">0</div>
+                <div class="stat-label">Verified Investors</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-number" data-target="2.4" data-suffix="M">0</div>
+                <div class="stat-label">Total Investment</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-number" data-target="340">0</div>
+                <div class="stat-label">Ideas in Marketplace</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- How Neurona Helps Section -->
+    <section class="how-neurona-helps-section">
+      <div class="container">
+        <div class="row align-items-center">
+          <!-- Left Side: How Neurona Works -->
+          <div class="col-lg-6">
+            <div class="how-it-works-section">
+              <h3 class="how-it-works-title">How Neurona Works</h3>
+              <p class="how-it-works-description">
+                Discover our streamlined process that connects visionary creators with strategic investors through three simple steps.
+              </p>
+
+              <!-- Slideshow Container -->
+              <div class="slideshow-container">
+                <div class="slide-wrapper">
+                  <!-- Creator Slide -->
+                  <div class="slide active" data-slide="creator">
+                    <div class="slide-content">
+                      <div class="slide-image">
+                        <img src="{{ url_for('static', filename='images/creator1.jpg') }}" alt="Creator Process" class="slide-img">
+                        <div class="slide-overlay">
+
+                            <i class="fas fa-lightbulb"></i>
+
+                        </div>
+                      </div>
+                      <div class="slide-text">
+                        <h4 class="slide-title">For Creators</h4>
+                        <p class="slide-description">
+                          Share your innovative ideas with verified investors. Upload your concepts, showcase your vision, and connect with the right funding partners.
+                        </p>
+                        <div class="slide-features">
+                          <div class="feature-point">
+                            <i class="fas fa-upload"></i>
+                            <span>Upload Ideas</span>
+                          </div>
+                          <div class="feature-point">
+                            <i class="fas fa-users"></i>
+                            <span>Connect with Investors</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Investor Slide -->
+                  <div class="slide" data-slide="investor">
+                    <div class="slide-content">
+                      <div class="slide-image">
+                        <img src="{{ url_for('static', filename='images/investor1.jpg') }}" alt="Investor Process" class="slide-img">
+                        <div class="slide-overlay">
+
+                            <i class="fas fa-chart-line"></i>
+
+                        </div>
+                      </div>
+                      <div class="slide-text">
+                        <h4 class="slide-title">For Investors</h4>
+                        <p class="slide-description">
+                          Discover high-potential opportunities before anyone else. Browse curated ideas from verified creators and make strategic investments.
+                        </p>
+                        <div class="slide-features">
+                          <div class="feature-point">
+                            <i class="fas fa-search"></i>
+                            <span>Discover Ideas</span>
+                          </div>
+                          <div class="feature-point">
+                            <i class="fas fa-shield-alt"></i>
+                            <span>Verified Creators</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Transaction Slide -->
+                  <div class="slide" data-slide="transaction">
+                    <div class="slide-content">
+                      <div class="slide-image">
+                        <img src="{{ url_for('static', filename='images/transaction.jpg') }}" alt="Transaction Process" class="slide-img">
+                        <div class="slide-overlay">
+
+                            <i class="fas fa-handshake"></i>
+
+                        </div>
+                      </div>
+                      <div class="slide-text">
+                        <h4 class="slide-title">Secure Transactions</h4>
+                        <p class="slide-description">
+                          Experience seamless, secure transactions with our advanced platform. From initial contact to final investment, every step is protected.
+                        </p>
+                        <div class="slide-features">
+                          <div class="feature-point">
+                            <i class="fas fa-lock"></i>
+                            <span>Secure Platform</span>
+                          </div>
+                          <div class="feature-point">
+                            <i class="fas fa-chart-bar"></i>
+                            <span>Real-time Tracking</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Navigation Dots -->
+                <div class="slide-navigation">
+                  <button class="nav-dot active" data-target="creator">
+                    <span class="dot-number">1</span>
+                    <span class="dot-label">Creator</span>
+                  </button>
+                  <button class="nav-dot" data-target="investor">
+                    <span class="dot-number">2</span>
+                    <span class="dot-label">Investor</span>
+                  </button>
+                  <button class="nav-dot" data-target="transaction">
+                    <span class="dot-number">3</span>
+                    <span class="dot-label">Transaction</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Side: How Neurona Helps You -->
+          <div class="col-lg-6">
+            <div class="how-neurona-helps-content">
+              <h3 class="helps-title">How Neurona Helps You</h3>
+              <p class="helps-description">
+                We bridge the gap between innovative minds and strategic capital, creating a seamless ecosystem where creativity meets opportunity.
+              </p>
+
+              <div class="help-benefits">
+                <div class="benefit-item">
+                  <div class="benefit-icon">
+                    <i class="fas fa-rocket"></i>
+                  </div>
+                  <div class="benefit-content">
+                    <h5>Accelerate Growth</h5>
+                    <p>Transform your ideas into reality with the right funding and strategic partnerships.</p>
+                  </div>
+                </div>
+
+                <div class="benefit-item">
+                  <div class="benefit-icon">
+                    <i class="fas fa-network-wired"></i>
+                  </div>
+                  <div class="benefit-content">
+                    <h5>Build Networks</h5>
+                    <p>Connect with like-minded innovators, experienced mentors, and industry experts.</p>
+                  </div>
+                </div>
+
+                <div class="benefit-item">
+                  <div class="benefit-icon">
+                    <i class="fas fa-shield-check"></i>
+                  </div>
+                  <div class="benefit-content">
+                    <h5>Secure Platform</h5>
+                    <p>Trust in our verified community with advanced security measures and transparent processes.</p>
+                  </div>
+                </div>
+
+                    <i class="fas fa-chart-growth"></i>
+                  <i class="fas fa-chart-line"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Professional Blank White Section -->
+    <section class="blank-white-section">
+      <div class="container">
+        <div class="blank-content">
+          <h2 class="blank-title">Ready to Transform Your Ideas?</h2>
+          <p class="blank-subtitle">Join thousands of creators and investors building the future together</p>
+          <div class="blank-cta">
+            <a href="{{ url_for('register') }}" class="btn-blank-primary">
+              Start Your Journey
+              <i class="fas fa-arrow-right"></i>
+            </a>
+            <a href="{{ url_for('about_us') }}" class="btn-blank-secondary">
+              Learn More
+              <i class="fas fa-info-circle"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-6 col-md-12 mb-4">
+            <div class="footer-left">
+              <img src="{{ url_for('static', filename='images/logo_white.png') }}" alt="Neurona Logo" class="footer-logo">
+              <p class="footer-description">
+                The past was the age of Industrialization. Present is the age of information. Our belief is that the future is an age of creativity.
+                <br><br>
+                We want to create a market where creativity becomes a tradable product. In an era where every industry is built and every info is a search away, creativity is the new currency. Neurona is the answer.
+              </p>
+            </div>
+          </div>
+          <div class="col-lg-6 col-md-12 mb-4">
+            <div class="footer-right">
+              <div class="footer-section mb-3">
+                <h5 class="footer-title">Connect With Us</h5>
+                <div class="footer-social">
+                  <a href="#" class="social-link"><i class="bi bi-facebook"></i></a>
+                  <a href="#" class="social-link"><i class="bi bi-twitter"></i></a>
+                  <a href="#" class="social-link"><i class="bi bi-instagram"></i></a>
+                  <a href="#" class="social-link"><i class="bi bi-linkedin"></i></a>
+                </div>
+              </div>
+              <div class="footer-section">
+                <h5 class="footer-title">Useful Links</h5>
+                <div class="footer-links-horizontal">
+                  <a href="{{ url_for('terms_of_service') }}" class="footer-link-item">Terms of Service</a>
+                  <a href="{{ url_for('privacy_policy') }}" class="footer-link-item">Privacy Policy</a>
+                  <a href="{{ url_for('about_us') }}" class="footer-link-item">About Us</a>
+                  <a href="{{ url_for('contact_us') }}" class="footer-link-item">Contact Us</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <div class="row">
+            <div class="col-12">
+              <hr class="footer-divider">
+              <p class="footer-copyright">&copy; 2025 Neurona. All rights reserved.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>
+
+
+  <!-- JS Scripts -->
+  <script>
+    // Navbar scroll effect
+    window.addEventListener('scroll', () => {
+  const navbar = document.querySelector('.navbar');
+  const logo = document.querySelector('.navbar-logo');
+
+  if (window.scrollY > 50) {
+    navbar.classList.add('scrolled', 'dark');
+    navbar.classList.remove('light');
+  } else {
+    navbar.classList.remove('scrolled', 'dark');
+    navbar.classList.add('light');
+  }
+});
+
+
+    // Animated counter
+    function animateCounter(element) {
+      const target = parseFloat(element.getAttribute('data-target'));
+      const suffix = element.getAttribute('data-suffix') || '';
+      const duration = 2000;
+      const increment = target / (duration / 16);
+      let current = 0;
+
+      const timer = setInterval(() => {
+        current += increment;
+        if (current >= target) {
+          current = target;
+          clearInterval(timer);
+        }
+        if (suffix === 'M') {
+          element.textContent = current.toFixed(1) + suffix;
+        } else {
+          element.textContent = Math.floor(current).toLocaleString() + suffix;
+        }
+      }, 16);
+    }
+
+    const observerOptions = {
+      threshold: 0.3,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const aboutContent = entry.target.closest('.about-section').querySelector('.about-content');
+          const statsGrid = entry.target.closest('.about-section').querySelector('.stats-grid');
+
+          aboutContent.classList.add('animate');
+          statsGrid.classList.add('animate');
+
+          const counters = entry.target.querySelectorAll('.stat-number');
+          setTimeout(() => {
+            counters.forEach(counter => animateCounter(counter));
+          }, 400);
+
+          observer.unobserve(entry.target);
+        }
+      });
+    }, observerOptions);
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const statsSection = document.querySelector('.stats-grid');
+      if (statsSection) {
+        observer.observe(statsSection);
+      }
+    });
+
+    // Slideshow functionality
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const navDots = document.querySelectorAll('.nav-dot');
+    const totalSlides = slides.length;
+
+    function showSlide(index) {
+      // Remove active class from all slides and dots
+      slides.forEach(slide => {
+        slide.classList.remove('active', 'prev');
+      });
+      navDots.forEach(dot => dot.classList.remove('active'));
+
+      // Add active class to current slide and dot
+      slides[index].classList.add('active');
+      navDots[index].classList.add('active');
+
+      // Add prev class to previous slide for animation
+      const prevIndex = currentSlide;
+      if (prevIndex !== index) {
+        slides[prevIndex].classList.add('prev');
+      }
+
+      currentSlide = index;
+    }
+
+    function nextSlide() {
+      const next = (currentSlide + 1) % totalSlides;
+      showSlide(next);
+    }
+
+    // Auto-advance slideshow
+    let slideInterval = setInterval(nextSlide, 5000);
+
+    // Navigation dot click handlers
+    navDots.forEach((dot, index) => {
+      dot.addEventListener('click', () => {
+        clearInterval(slideInterval);
+        showSlide(index);
+        slideInterval = setInterval(nextSlide, 5000);
+      });
+    });
+
+    // Pause slideshow on hover
+    const slideshowContainer = document.querySelector('.slideshow-container');
+    if (slideshowContainer) {
+      slideshowContainer.addEventListener('mouseenter', () => {
+        clearInterval(slideInterval);
+      });
+
+      slideshowContainer.addEventListener('mouseleave', () => {
+        slideInterval = setInterval(nextSlide, 5000);
+      });
+    }
+
+    // Initialize slideshow
+    document.addEventListener('DOMContentLoaded', () => {
+      if (slides.length > 0) {
+        showSlide(0);
+      }
+    });
+  </script>
+</body>
+</html>
