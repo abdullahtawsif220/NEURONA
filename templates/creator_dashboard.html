@@ -11,26 +11,20 @@
 </head>
 <body>
 
-<!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark py-3">
   <div class="container d-flex justify-content-between align-items-center">
 
-    <!-- Logo / Brand -->
     <div class="logo">
       <img src="{{ url_for('static', filename='images/logo_white.png') }}" class="navbar-logo" alt="Neurona Logo">
     </div>
 
-    <!-- Right Section -->
     <div class="profile-section d-flex align-items-center gap-3">
 
-      <!-- Creator Name -->
       <span class="creator-name">{{ creator_name or username }}</span>
-      <!-- Verified Badge -->
-      {% if verified %}
+      {% if verified == 1 %}
         <span class="verification-badge ms-2">Verified</span>
       {% endif %}
 
-      <!-- Profile Button + Dropdown -->
       <div class="profile-dropdown position-relative">
         <button class="profile-button">
           <img src="{{ url_for('static', filename='images/user_logo.png') }}" alt="Profile" class="profile-img" />
@@ -39,7 +33,6 @@
 
 
 
-        <!-- Dropdown Menu -->
         <div class="dropdown-content">
           <a href="#">Profile</a>
           <a href="#">Notification</a>
@@ -54,7 +47,6 @@
 </nav>
 
 
-  <!-- Flash Messages -->
   <div class="container mt-3">
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
@@ -68,7 +60,6 @@
     {% endwith %}
   </div>
 
-  <!-- Hero Section with Fiverr-style Design -->
   <section class="hero-section">
     <div class="hero-background">
       <div class="container">
@@ -78,7 +69,6 @@
           </div>
         </div>
 
-        <!-- Action Cards Container -->
         <div class="row mt-4">
           <div class="col-lg-6 mb-3">
             <div class="action-card">
@@ -110,11 +100,11 @@
                   <i class="fas fa-user-circle"></i>
                 </div>
                 <div class="card-text">
-                  <h5>{% if verified %}You've completed your profile{% else %}You've completed 35% of your profile{% endif %}</h5>
-                  <p>{% if verified %}Your profile is complete and verified!{% else %}Complete it to get tailored suggestions.{% endif %}</p>
+                  <h5>{% if verified == 1 %}You've completed your profile{% else %}You've completed 35% of your profile{% endif %}</h5>
+                  <p>{% if verified == 1 %}Your profile is complete and verified!{% else %}Complete it to get tailored suggestions.{% endif %}</p>
                 </div>
                 <div class="card-action">
-                  {% if verified %}
+                  {% if verified == 1 %}
                     <span class="btn btn-completed">Completed</span>
                   {% else %}
                     <a href="{{ url_for('verify_creator') }}" class="btn btn-complete-info">Complete Info</a>
@@ -128,7 +118,6 @@
     </div>
   </section>
 
-  <!-- Explore Ideas Section -->
   <section class="explore-section py-5">
     <div class="container">
       <div class="d-flex justify-content-between align-items-center mb-4">
