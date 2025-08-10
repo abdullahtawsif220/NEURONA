@@ -699,7 +699,6 @@ def idea_details(idea_id):
             i.stage,
             i.summary, 
             i.description,
-            i.description,
             i.industry,
             i.funding_needed,
             i.equity_offered,
@@ -707,7 +706,6 @@ def idea_details(idea_id):
             i.product_image,
             i.created_at,
             u.username,
-            u.full_name
             u.full_name
         FROM ideas i 
         JOIN users u ON i.creator_id = u.id
