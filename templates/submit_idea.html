@@ -105,7 +105,7 @@
       <section id="funding" class="d-none">
 
         <div class="mb-3">
-          <label for="funding_needed" class="form-label text-white">Ask Price(BDT)</label>
+          <label for="funding_needed" class="form-label text-white">Ask Price</label>
           <input name="funding_needed" id="funding_needed" type="number" class="form-control bg-transparent text-white" placeholder="Amount Needed ($)*" min="100" required>
           <div class="invalid-feedback">Please enter a valid amount greater than or equal to 10000BDT.</div>
         </div>
@@ -141,6 +141,11 @@
         <div class="mb-3">
           <label class="form-label text-white">Business Plan</label>
           <input name="business_plan" type="file" class="form-control bg-transparent text-white" required>
+        </div>
+        <div class="mb-3">
+        <label class="form-label text-white">Product Image</label>
+        <input name="product_image" type="file" id="product_image" class="form-control bg-transparent text-white" accept="image/*" required>
+        <div class="invalid-feedback">Please upload a product image.</div>
         </div>
 
         <div class="mb-3">
@@ -233,6 +238,7 @@ function validateFields(sectionId) {
     }
 
     switch (input.name) {
+
       case 'summary':
         const validSummary = sentenceCount(val) <= 5 && wordCount(val) <= 75;
         input.classList.add(validSummary ? 'is-valid' : 'is-invalid');
@@ -343,6 +349,15 @@ case 'stage':
   if (!validTitle) isValid = false;
   break;
 
+case 'product_image':
+  if (!input.files.length) {
+    input.classList.add('is-invalid');
+    isValid = false;
+  } else {
+    input.classList.remove('is-invalid');
+    input.classList.add('is-valid');
+  }
+  break;
 
     }
   });
@@ -411,6 +426,16 @@ function addFileField() {
   Array.from(forms).forEach(form => {
     form.addEventListener('submit', event => {
       let isValid = true;
+// Validate product image
+const productImage = document.getElementById('product_image');
+if (!productImage.files.length) {
+  productImage.classList.add('is-invalid');
+  productImage.classList.remove('is-valid');
+  isValid = false;
+} else {
+  productImage.classList.remove('is-invalid');
+  productImage.classList.add('is-valid');
+}
 
       // Validate funding section (your existing validateFields function)
       const finalSectionValid = validateFields('funding');
