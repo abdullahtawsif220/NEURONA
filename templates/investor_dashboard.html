@@ -185,19 +185,17 @@
     <div class="section-header">
       <h2 class="section-title">Investment Opportunities</h2>
       <div class="section-filters">
-        <select class="filter-select">
-          <option>All Categories</option>
-          <option>Technology</option>
-          <option>Healthcare</option>
-          <option>Finance</option>
-          <option>Education</option>
+        <select class="filter-select" id="categoryFilter" onchange="applyFilters()">
+          <option value="">All Categories</option>
+          {% for category in categories %}
+          <option value="{{ category.category }}" {% if current_category == category.category %}selected{% endif %}>{{ category.category }}</option>
+          {% endfor %}
         </select>
-        <select class="filter-select">
-          <option>All Stages</option>
-          <option>Seed</option>
-          <option>Series A</option>
-          <option>Series B</option>
-          <option>Growth</option>
+        <select class="filter-select" id="stageFilter" onchange="applyFilters()">
+          <option value="">All Stages</option>
+          {% for stage in stages %}
+          <option value="{{ stage.stage }}" {% if current_stage == stage.stage %}selected{% endif %}>{{ stage.stage }}</option>
+          {% endfor %}
         </select>
         <button class="view-toggle active" data-view="grid">
           <i class="fas fa-th"></i>
@@ -209,7 +207,7 @@
     </div>
     
     <div class="opportunities-grid" id="opportunitiesGrid">
-      {% for i in range(6) %}
+      {% for idea in ideas %}
       <div class="opportunity-card">
         <div class="opportunity-header">
           <div class="opportunity-image">
@@ -223,40 +221,48 @@
         
         <div class="opportunity-content">
           <div class="opportunity-meta">
-            <span class="category">Technology</span>
-            <span class="stage">Series A</span>
+            <span class="category">{{ idea.category }}</span>
+            <span class="stage">{{ idea.stage or 'Idea' }}</span>
           </div>
           
-          <h3 class="opportunity-title">AI-Powered Healthcare Platform {{ i+1 }}</h3>
-          <p class="opportunity-description">Revolutionary healthcare solution using artificial intelligence to improve patient outcomes and reduce costs.</p>
+          <h3 class="opportunity-title">{{ idea.title }}</h3>
+          <p class="opportunity-description">{{ idea.summary }}</p>
+          
+          {% if idea.tags %}
+          <div class="opportunity-tags mb-2">
+            {% for tag in idea.tags.split(',') %}
+            <span class="tag-badge">{{ tag.strip() }}</span>
+            {% endfor %}
+          </div>
+          {% endif %}
           
           <div class="opportunity-metrics">
             <div class="metric">
               <span class="metric-label">Seeking</span>
-              <span class="metric-value">${{ 500 + i * 100 }}K</span>
+              <span class="metric-value">${{ "{:,.0f}".format(idea.funding_needed) }}</span>
             </div>
             <div class="metric">
               <span class="metric-label">Equity</span>
-              <span class="metric-value">{{ 15 + i * 2 }}%</span>
+              <span class="metric-value">{{ idea.equity_offered }}%</span>
             </div>
             <div class="metric">
               <span class="metric-label">Valuation</span>
-              <span class="metric-value">${{ 2 + i }}M</span>
+              <span class="metric-value">TBD</span>
             </div>
           </div>
           
           <div class="opportunity-progress">
             <div class="progress-bar">
-              <div class="progress-fill" data-progress="{{ 60 + i * 5 }}"></div>
+              <div class="progress-fill" data-progress="25"></div>
             </div>
-            <span class="progress-text">{{ 60 + i * 5 }}% funded</span>
+            <span class="progress-text">25% funded</span>
           </div>
           
           <div class="opportunity-footer">
             <div class="founder-info">
               <img src="{{ url_for('static', filename='images/user_logo.png') }}" alt="Founder" class="founder-avatar">
               <div>
-                <span class="founder-name">John Doe</span>
+                <span class="founder-name">{{ idea.username }}</span>
                 <span class="founder-title">CEO & Founder</span>
               </div>
             </div>
@@ -273,6 +279,11 @@
             </div>
           </div>
         </div>
+      </div>
+      {% else %}
+      <div class="col-12 text-center py-5">
+        <h4 class="text-muted">No investment opportunities available yet</h4>
+        <p class="text-muted">Check back later for new ideas from creators!</p>
       </div>
       {% endfor %}
     </div>
@@ -394,6 +405,26 @@
     });
   });
 
+  // Filter functionality
+  function applyFilters() {
+    const category = document.getElementById('categoryFilter').value;
+    const stage = document.getElementById('stageFilter').value;
+    const search = document.querySelector('input[name="search"]').value;
+    
+    const url = new URL(window.location.href);
+    url.searchParams.set('category', category);
+    url.searchParams.set('stage', stage);
+    url.searchParams.set('search', search);
+    
+    window.location.href = url.toString();
+  }
+
+  // Search form submission
+  document.querySelector('.search-container form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    applyFilters();
+  });
+
   // Search functionality
   document.querySelector('.search-input').addEventListener('focus', function() {
     this.parentElement.classList.add('focused');
@@ -401,6 +432,14 @@
 
   document.querySelector('.search-input').addEventListener('blur', function() {
     this.parentElement.classList.remove('focused');
+  });
+
+  // Search on Enter key
+  document.querySelector('.search-input').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      applyFilters();
+    }
   });
 </script>
 
