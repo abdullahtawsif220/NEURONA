@@ -41,6 +41,8 @@ def init_db():
                        creator_id INTEGER NOT NULL,
                        title TEXT NOT NULL,
                        category TEXT NOT NULL,
+                       tags TEXT,
+                       stage TEXT DEFAULT 'Idea',
                        industry TEXT,
                        summary TEXT,
                        description TEXT,
@@ -60,6 +62,20 @@ def init_db():
         conn.commit()
         conn.close()
         print(f" Admin created: {admin_email} / {admin_password}")
+    else:
+        # Add new columns if they don't exist (for existing databases)
+        conn = sqlite3.connect(DB_NAME)
+        c = conn.cursor()
+        try:
+            c.execute("ALTER TABLE ideas ADD COLUMN tags TEXT")
+        except sqlite3.OperationalError:
+            pass  # Column already exists
+        try:
+            c.execute("ALTER TABLE ideas ADD COLUMN stage TEXT DEFAULT 'Idea'")
+        except sqlite3.OperationalError:
+            pass  # Column already exists
+        conn.commit()
+        conn.close()
 
 
 @app.route('/')
@@ -153,11 +169,29 @@ def creator_dashboard():
     if 'username' in session and session.get('role') == 'creator':
         conn = get_db_connection()
         user = conn.execute("SELECT verified FROM users WHERE email = ?", (session['email'],)).fetchone()
+        
+        # Fetch creator's own ideas
+        creator_ideas = conn.execute('''
+            SELECT 
+                id, 
+                title, 
+                category, 
+                summary, 
+                industry,
+                funding_needed,
+                equity_offered,
+                contact_email,
+                created_at
+            FROM ideas 
+            WHERE creator_id = ?
+            ORDER BY created_at DESC
+        ''', (session['user_id'],)).fetchall()
+        
         conn.close()
         verified = user['verified'] if user else 0
         # Update session so you keep the verified status too
         session['verified'] = verified
-        return render_template('creator_dashboard.html', username=session['username'], verified=verified)
+        return render_template('creator_dashboard.html', username=session['username'], verified=verified, creator_ideas=creator_ideas)
 
     return redirect(url_for('login'))
 
@@ -233,6 +267,8 @@ def submit_idea():
     if request.method == 'POST':
         title = request.form['title']
         category = request.form['category']
+        tags = request.form.get('tags', '')
+        stage = request.form.get('stage', 'Idea')
         industry = request.form.get('industry')
         summary = request.form.get('summary')
         description = request.form.get('description')
@@ -249,10 +285,10 @@ def submit_idea():
             creator_id = creator['id']
             c.execute('''
                 INSERT INTO ideas (
-                    creator_id, title, category, industry, summary, description,
+                    creator_id, title, category, tags, stage, industry, summary, description,
                     funding_needed, equity_offered, contact_email
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-            ''', (creator_id, title, category, industry, summary, description, funding, equity, contact_email))
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ''', (creator_id, title, category, tags, stage, industry, summary, description, funding, equity, contact_email))
             conn.commit()
             conn.close()
             flash('Idea submitted successfully!', 'success')
@@ -276,11 +312,72 @@ def investor_dashboard():
     if 'username' in session and session.get('role') == 'investor':
         conn = get_db_connection()
         user = conn.execute("SELECT verified FROM users WHERE email = ?", (session['email'],)).fetchone()
+        
+        # Get search and filter parameters
+        search_query = request.args.get('search', '').strip()
+        category_filter = request.args.get('category', '').strip()
+        stage_filter = request.args.get('stage', '').strip()
+        
+        # Build the SQL query with filters
+        base_query = '''
+            SELECT 
+                i.id, 
+                i.title, 
+                i.category, 
+                i.tags,
+                i.stage,
+                i.summary, 
+                i.industry,
+                i.funding_needed,
+                i.equity_offered,
+                i.contact_email,
+                i.created_at,
+                u.username 
+            FROM ideas i 
+            JOIN users u ON i.creator_id = u.id
+            WHERE 1=1
+        '''
+        
+        params = []
+        
+        # Add search filter
+        if search_query:
+            base_query += " AND (i.title LIKE ? OR i.category LIKE ? OR i.tags LIKE ?)"
+            search_param = f"%{search_query}%"
+            params.extend([search_param, search_param, search_param])
+        
+        # Add category filter
+        if category_filter and category_filter != 'All Categories':
+            base_query += " AND i.category = ?"
+            params.append(category_filter)
+        
+        # Add stage filter
+        if stage_filter and stage_filter != 'All Stages':
+            base_query += " AND i.stage = ?"
+            params.append(stage_filter)
+        
+        base_query += " ORDER BY i.created_at DESC"
+        
+        # Fetch all ideas for investment opportunities
+        ideas = conn.execute(base_query, params).fetchall()
+        
+        # Get unique categories and stages for filter dropdowns
+        categories = conn.execute("SELECT DISTINCT category FROM ideas WHERE category IS NOT NULL ORDER BY category").fetchall()
+        stages = conn.execute("SELECT DISTINCT stage FROM ideas WHERE stage IS NOT NULL ORDER BY stage").fetchall()
+        
         conn.close()
         verified = user['verified'] if user else 0
         # Update session so you keep the verified status too
         session['verified'] = verified
-        return render_template('investor_dashboard.html', username=session['username'], verified=verified)
+        return render_template('investor_dashboard.html', 
+                             username=session['username'], 
+                             verified=verified, 
+                             ideas=ideas,
+                             categories=categories,
+                             stages=stages,
+                             current_search=search_query,
+                             current_category=category_filter,
+                             current_stage=stage_filter)
     return redirect(url_for('login'))
 
 
