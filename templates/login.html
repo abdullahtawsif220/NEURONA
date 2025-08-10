@@ -21,7 +21,7 @@
             position: relative;
             overflow: hidden;
         }
-        
+
         .login-body::before {
             content: '';
             position: absolute;
@@ -29,13 +29,13 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: 
-                radial-gradient(circle at 20% 80%, rgba(166, 139, 92, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(166, 139, 92, 0.05) 0%, transparent 50%),
+            background:
+                radial-gradient(circle at 20% 80%, rgba(129, 129, 129, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(129, 129, 129, 0.05) 0%, transparent 50%),
                 radial-gradient(circle at 40% 40%, rgba(255, 255, 255, 0.02) 0%, transparent 50%);
             pointer-events: none;
         }
-        
+
         .login-container {
             position: relative;
             z-index: 2;
@@ -43,20 +43,20 @@
             max-width: 450px;
             padding: 20px;
         }
-        
+
         .login-card {
             background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 20px;
             padding: 40px;
-            box-shadow: 
+            box-shadow:
                 0 20px 40px rgba(0, 0, 0, 0.3),
                 inset 0 1px 0 rgba(255, 255, 255, 0.1);
             position: relative;
             overflow: hidden;
         }
-        
+
         .login-card::before {
             content: '';
             position: absolute;
@@ -66,34 +66,34 @@
             height: 1px;
             background: linear-gradient(90deg, transparent, rgba(166, 139, 92, 0.5), transparent);
         }
-        
+
         .login-header {
             text-align: center;
             margin-bottom: 30px;
         }
-        
+
         .login-title {
             font-size: 28px;
             font-weight: 700;
             color: #ffffff;
             margin-bottom: 8px;
-            background: linear-gradient(135deg, #ffffff, #A68B5C);
+            background: linear-gradient(135deg, #ffffff, #818181);
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-        
+
         .login-subtitle {
             color: rgba(255, 255, 255, 0.7);
             font-size: 14px;
             font-weight: 400;
         }
-        
+
         .form-group {
             margin-bottom: 20px;
             position: relative;
         }
-        
+
         .form-label {
             color: rgba(255, 255, 255, 0.9);
             font-weight: 500;
@@ -101,7 +101,7 @@
             margin-bottom: 8px;
             display: block;
         }
-        
+
         .form-control {
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.15);
@@ -112,7 +112,7 @@
             transition: all 0.3s ease;
             backdrop-filter: blur(10px);
         }
-        
+
         .form-control:focus {
             background: rgba(255, 255, 255, 0.08);
             border-color: #A68B5C;
@@ -120,15 +120,15 @@
             color: #ffffff;
             outline: none;
         }
-        
+
         .form-control::placeholder {
             color: rgba(255, 255, 255, 0.5);
         }
-        
+
         .login-btn {
             width: 100%;
             padding: 14px;
-            background: linear-gradient(135deg, #A68B5C 0%, #8B7355 100%);
+            background: linear-gradient(135deg, #818181 0%, #818181 100%);
             border: none;
             border-radius: 12px;
             color: #ffffff;
@@ -139,7 +139,7 @@
             overflow: hidden;
             margin-top: 10px;
         }
-        
+
         .login-btn::before {
             content: '';
             position: absolute;
@@ -150,44 +150,44 @@
             background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
             transition: left 0.5s;
         }
-        
+
         .login-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 10px 25px rgba(166, 139, 92, 0.3);
         }
-        
+
         .login-btn:hover::before {
             left: 100%;
         }
-        
+
         .login-btn:active {
             transform: translateY(0);
         }
-        
+
         .login-footer {
             text-align: center;
             margin-top: 25px;
             padding-top: 20px;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
-        
+
         .login-footer p {
             color: rgba(255, 255, 255, 0.7);
             font-size: 14px;
             margin: 0;
         }
-        
+
         .login-footer a {
-            color: #A68B5C;
+            color: #cbcbcb;
             text-decoration: none;
             font-weight: 600;
             transition: color 0.3s ease;
         }
-        
+
         .login-footer a:hover {
             color: #ffffff;
         }
-        
+
         .flash-message {
             background: rgba(239, 68, 68, 0.1);
             border: 1px solid rgba(239, 68, 68, 0.3);
@@ -198,23 +198,23 @@
             font-size: 14px;
             backdrop-filter: blur(10px);
         }
-        
+
         .flash-message.alert-success {
             background: rgba(16, 185, 129, 0.1);
             border-color: rgba(16, 185, 129, 0.3);
         }
-        
+
         .flash-message.alert-info {
             background: rgba(59, 130, 246, 0.1);
             border-color: rgba(59, 130, 246, 0.3);
         }
-        
+
         @media (max-width: 576px) {
             .login-card {
                 padding: 30px 25px;
                 margin: 20px;
             }
-            
+
             .login-title {
                 font-size: 24px;
             }
@@ -244,12 +244,12 @@
                     <label for="email" class="form-label">Email Address</label>
                     <input required type="email" class="form-control" id="email" name="email" placeholder="Enter your email" />
                 </div>
-                
+
                 <div class="form-group">
                     <label for="password" class="form-label">Password</label>
                     <input required type="password" class="form-control" id="password" name="password" placeholder="Enter your password" />
                 </div>
-                
+
                 <button type="submit" class="login-btn">
                     Sign In
                 </button>
