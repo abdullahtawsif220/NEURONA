@@ -12,74 +12,44 @@
 <body>
 
 <!-- Top Navigation Bar -->
-<nav class="top-nav">
-  <div class="nav-container">
-    <div class="nav-left">
-      <img src="{{ url_for('static', filename='images/logo_white.png') }}" class="nav-logo" alt="Neurona">
-      <div class="nav-divider"></div>
-      <h1 class="nav-title">Investment Portal</h1>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark py-3">
+  <div class="container d-flex justify-content-between align-items-center">
+
+    <div class="logo">
+      <img src="{{ url_for('static', filename='images/logo_white.png') }}" class="navbar-logo" alt="Neurona Logo">
     </div>
-    
-    <div class="nav-center">
+
+<!-- search button -->
+
+      <div class="nav-center">
       <div class="search-container">
         <i class="fas fa-search search-icon"></i>
         <input type="text" placeholder="Search ideas, categories, or creators..." class="search-input">
       </div>
     </div>
-    
-    <div class="nav-right">
-      <div class="nav-actions">
-        <button class="nav-btn">
-          <i class="fas fa-bell"></i>
-          <span class="notification-badge">3</span>
+
+    <div class="profile-section d-flex align-items-center gap-3">
+
+      <span class="creator-name">{{ username }}</span>
+      {% if verified == 1 %}
+        <span class="verification-badge ms-2">Verified</span>
+      {% endif %}
+
+      <div class="profile-dropdown position-relative">
+        <button class="profile-button">
+          <img src="{{ url_for('static', filename='images/user_logo.png') }}" alt="Profile" class="profile-img" />
+          <i class="fas fa-chevron-down dropdown-arrow"></i>
         </button>
-        <button class="nav-btn">
-          <i class="fas fa-bookmark"></i>
-        </button>
-        <button class="nav-btn">
-          <i class="fas fa-chart-line"></i>
-        </button>
-      </div>
-      
-      <div class="profile-section">
-        <div class="profile-info">
-          <span class="profile-name">{{ username }}</span>
-          {% if verified %}
-            <span class="verified-badge">
-              <i class="fas fa-shield-check"></i>
-              Verified Investor
-            </span>
-          {% else %}
-            <span class="unverified-badge">
-              <i class="fas fa-exclamation-triangle"></i>
-              Pending Verification
-            </span>
-          {% endif %}
-        </div>
-        <div class="profile-dropdown">
-          <img src="{{ url_for('static', filename='images/user_logo.png') }}" alt="Profile" class="profile-avatar">
-          <div class="dropdown-menu">
-            <a href="#" class="dropdown-item">
-              <i class="fas fa-user"></i>
-              Profile Settings
-            </a>
-            <a href="#" class="dropdown-item">
-              <i class="fas fa-wallet"></i>
-              Wallet & Billing
-            </a>
-            <a href="#" class="dropdown-item">
-              <i class="fas fa-chart-bar"></i>
-              Investment History
-            </a>
-            <div class="dropdown-divider"></div>
-            <a href="{{ url_for('logout') }}" class="dropdown-item logout">
-              <i class="fas fa-sign-out-alt"></i>
-              Sign Out
-            </a>
-          </div>
+
+        <div class="dropdown-content">
+          <a href="#">Profile</a>
+          <a href="#">Notification</a>
+          <a href="#">Wallet</a>
+          <a href="{{ url_for('logout') }}">Logout</a>
         </div>
       </div>
     </div>
+
   </div>
 </nav>
 
@@ -105,7 +75,10 @@
     <div class="hero-content">
       <div class="hero-text">
         <h1 class="hero-title">Welcome back, {{ username }}</h1>
-        <p class="hero-subtitle">Discover your next investment opportunity</p>
+        <div class="hero-actions">
+          <p class="hero-subtitle">Discover your next investment op
+          </a>
+        </div>
       </div>
       
       {% if not verified %}
