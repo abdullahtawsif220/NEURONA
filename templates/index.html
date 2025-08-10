@@ -19,9 +19,9 @@
       </div>
       <ul class="nav-links">
         <li><a href="#" class="nav-link">Home</a></li>
-        <li><a href="#" class="nav-link">About</a></li>
+        <li><a href="{{ url_for('about_us') }}" class="nav-link">About</a></li>
         <li><a href="#" class="nav-link">Explore</a></li>
-        <li><a href="#" class="nav-link">Contact</a></li>
+         <li><a href="{{ url_for('contact_us') }}" class="nav-link">Contact</a></li>
       </ul>
       <div class="nav-actions">
         <a href="{{ url_for('login') }}" class="nav-button">Log In</a>
@@ -82,7 +82,199 @@
       </div>
     </section>
 
-<!-- Footer -->
+    <!-- How Neurona Helps Section -->
+    <section class="how-neurona-helps-section">
+      <div class="container">
+        <div class="row align-items-center">
+          <!-- Left Side: How Neurona Works -->
+          <div class="col-lg-6">
+            <div class="how-it-works-section">
+              <h3 class="how-it-works-title">How Neurona Works</h3>
+              <p class="how-it-works-description">
+                Discover our streamlined process that connects visionary creators with strategic investors through three simple steps.
+              </p>
+
+              <!-- Slideshow Container -->
+              <div class="slideshow-container">
+                <div class="slide-wrapper">
+                  <!-- Creator Slide -->
+                  <div class="slide active" data-slide="creator">
+                    <div class="slide-content">
+                      <div class="slide-image">
+                        <img src="{{ url_for('static', filename='images/creator1.jpg') }}" alt="Creator Process" class="slide-img">
+                        <div class="slide-overlay">
+
+                            <i class="fas fa-lightbulb"></i>
+
+                        </div>
+                      </div>
+                      <div class="slide-text">
+                        <h4 class="slide-title">For Creators</h4>
+                        <p class="slide-description">
+                          Share your innovative ideas with verified investors. Upload your concepts, showcase your vision, and connect with the right funding partners.
+                        </p>
+                        <div class="slide-features">
+                          <div class="feature-point">
+                            <i class="fas fa-upload"></i>
+                            <span>Upload Ideas</span>
+                          </div>
+                          <div class="feature-point">
+                            <i class="fas fa-users"></i>
+                            <span>Connect with Investors</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Investor Slide -->
+                  <div class="slide" data-slide="investor">
+                    <div class="slide-content">
+                      <div class="slide-image">
+                        <img src="{{ url_for('static', filename='images/investor1.jpg') }}" alt="Investor Process" class="slide-img">
+                        <div class="slide-overlay">
+
+                            <i class="fas fa-chart-line"></i>
+
+                        </div>
+                      </div>
+                      <div class="slide-text">
+                        <h4 class="slide-title">For Investors</h4>
+                        <p class="slide-description">
+                          Discover high-potential opportunities before anyone else. Browse curated ideas from verified creators and make strategic investments.
+                        </p>
+                        <div class="slide-features">
+                          <div class="feature-point">
+                            <i class="fas fa-search"></i>
+                            <span>Discover Ideas</span>
+                          </div>
+                          <div class="feature-point">
+                            <i class="fas fa-shield-alt"></i>
+                            <span>Verified Creators</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Transaction Slide -->
+                  <div class="slide" data-slide="transaction">
+                    <div class="slide-content">
+                      <div class="slide-image">
+                        <img src="{{ url_for('static', filename='images/transaction.jpg') }}" alt="Transaction Process" class="slide-img">
+                        <div class="slide-overlay">
+
+                            <i class="fas fa-handshake"></i>
+
+                        </div>
+                      </div>
+                      <div class="slide-text">
+                        <h4 class="slide-title">Secure Transactions</h4>
+                        <p class="slide-description">
+                          Experience seamless, secure transactions with our advanced platform. From initial contact to final investment, every step is protected.
+                        </p>
+                        <div class="slide-features">
+                          <div class="feature-point">
+                            <i class="fas fa-lock"></i>
+                            <span>Secure Platform</span>
+                          </div>
+                          <div class="feature-point">
+                            <i class="fas fa-chart-bar"></i>
+                            <span>Real-time Tracking</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Navigation Dots -->
+                <div class="slide-navigation">
+                  <button class="nav-dot active" data-target="creator">
+                    <span class="dot-number">1</span>
+                    <span class="dot-label">Creator</span>
+                  </button>
+                  <button class="nav-dot" data-target="investor">
+                    <span class="dot-number">2</span>
+                    <span class="dot-label">Investor</span>
+                  </button>
+                  <button class="nav-dot" data-target="transaction">
+                    <span class="dot-number">3</span>
+                    <span class="dot-label">Transaction</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Side: How Neurona Helps You -->
+          <div class="col-lg-6">
+            <div class="how-neurona-helps-content">
+              <h3 class="helps-title">How Neurona Helps You</h3>
+              <p class="helps-description">
+                We bridge the gap between innovative minds and strategic capital, creating a seamless ecosystem where creativity meets opportunity.
+              </p>
+
+              <div class="help-benefits">
+                <div class="benefit-item">
+                  <div class="benefit-icon">
+                    <i class="fas fa-rocket"></i>
+                  </div>
+                  <div class="benefit-content">
+                    <h5>Accelerate Growth</h5>
+                    <p>Transform your ideas into reality with the right funding and strategic partnerships.</p>
+                  </div>
+                </div>
+
+                <div class="benefit-item">
+                  <div class="benefit-icon">
+                    <i class="fas fa-network-wired"></i>
+                  </div>
+                  <div class="benefit-content">
+                    <h5>Build Networks</h5>
+                    <p>Connect with like-minded innovators, experienced mentors, and industry experts.</p>
+                  </div>
+                </div>
+
+                <div class="benefit-item">
+                  <div class="benefit-icon">
+                    <i class="fas fa-shield-check"></i>
+                  </div>
+                  <div class="benefit-content">
+                    <h5>Secure Platform</h5>
+                    <p>Trust in our verified community with advanced security measures and transparent processes.</p>
+                  </div>
+                </div>
+
+                    <i class="fas fa-chart-growth"></i>
+                  <i class="fas fa-chart-line"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Professional Blank White Section -->
+    <section class="blank-white-section">
+      <div class="container">
+        <div class="blank-content">
+          <h2 class="blank-title">Ready to Transform Your Ideas?</h2>
+          <p class="blank-subtitle">Join thousands of creators and investors building the future together</p>
+          <div class="blank-cta">
+            <a href="{{ url_for('register') }}" class="btn-blank-primary">
+              Start Your Journey
+              <i class="fas fa-arrow-right"></i>
+            </a>
+            <a href="{{ url_for('about_us') }}" class="btn-blank-secondary">
+              Learn More
+              <i class="fas fa-info-circle"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
     <footer class="footer">
       <div class="container">
         <div class="row">
@@ -201,6 +393,68 @@
       const statsSection = document.querySelector('.stats-grid');
       if (statsSection) {
         observer.observe(statsSection);
+      }
+    });
+
+    // Slideshow functionality
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const navDots = document.querySelectorAll('.nav-dot');
+    const totalSlides = slides.length;
+
+    function showSlide(index) {
+      // Remove active class from all slides and dots
+      slides.forEach(slide => {
+        slide.classList.remove('active', 'prev');
+      });
+      navDots.forEach(dot => dot.classList.remove('active'));
+
+      // Add active class to current slide and dot
+      slides[index].classList.add('active');
+      navDots[index].classList.add('active');
+
+      // Add prev class to previous slide for animation
+      const prevIndex = currentSlide;
+      if (prevIndex !== index) {
+        slides[prevIndex].classList.add('prev');
+      }
+
+      currentSlide = index;
+    }
+
+    function nextSlide() {
+      const next = (currentSlide + 1) % totalSlides;
+      showSlide(next);
+    }
+
+    // Auto-advance slideshow
+    let slideInterval = setInterval(nextSlide, 5000);
+
+    // Navigation dot click handlers
+    navDots.forEach((dot, index) => {
+      dot.addEventListener('click', () => {
+        clearInterval(slideInterval);
+        showSlide(index);
+        slideInterval = setInterval(nextSlide, 5000);
+      });
+    });
+
+    // Pause slideshow on hover
+    const slideshowContainer = document.querySelector('.slideshow-container');
+    if (slideshowContainer) {
+      slideshowContainer.addEventListener('mouseenter', () => {
+        clearInterval(slideInterval);
+      });
+
+      slideshowContainer.addEventListener('mouseleave', () => {
+        slideInterval = setInterval(nextSlide, 5000);
+      });
+    }
+
+    // Initialize slideshow
+    document.addEventListener('DOMContentLoaded', () => {
+      if (slides.length > 0) {
+        showSlide(0);
       }
     });
   </script>
