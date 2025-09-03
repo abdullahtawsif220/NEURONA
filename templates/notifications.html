@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Notifications - Neurona</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f4f7f9;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    .navbar {
+      background-color: #000000 !important;
+      padding: 1rem 0;
+    }
+
+    .navbar-logo {
+      height: 50px;
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: #e9ecef;
+      border: 1px solid #ced4da;
+      border-radius: 8px;
+      color: #333;
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .back-btn:hover {
+      background: #dee2e6;
+      color: #333;
+    }
+
+    .notification-item {
+      background: #fff;
+      border: 1px solid #e9ecef;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 16px;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .notification-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .notification-item.unread {
+      border-left: 4px solid #007bff;
+      background: #f8f9ff;
+    }
+
+    .notification-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .notification-icon.success {
+      background: #28a745;
+    }
+
+    .notification-icon.info {
+      background: #17a2b8;
+    }
+
+    .notification-icon.warning {
+      background: #ffc107;
+      color: #000;
+    }
+
+    .notification-icon.investment_request {
+      background: #007bff;
+    }
+
+    .notification-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 4px;
+    }
+
+    .notification-message {
+      color: #666;
+      margin-bottom: 8px;
+      line-height: 1.5;
+    }
+
+    .notification-time {
+      font-size: 12px;
+      color: #999;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      background: #fff;
+      border-radius: 12px;
+      border: 1px solid #e9ecef;
+    }
+
+    .empty-state i {
+      font-size: 48px;
+      color: #ccc;
+      margin-bottom: 16px;
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark py-3">
+  <div class="container">
+    <div class="logo">
+      <img src="{{ url_for('static', filename='images/logo_white.png') }}" class="navbar-logo" alt="Neurona Logo">
+    </div>
+    <div class="ms-auto">
+      {% if role == 'creator' %}
+        <a href="{{ url_for('creator_dashboard') }}" class="back-btn">
+          <i class="fas fa-arrow-left"></i>
+          Back to Dashboard
+        </a>
+      {% elif role == 'investor' %}
+        <a href="{{ url_for('investor_dashboard') }}" class="back-btn">
+          <i class="fas fa-arrow-left"></i>
+          Back to Dashboard
+        </a>
+      {% else %}
+        <a href="{{ url_for('admin_dashboard') }}" class="back-btn">
+          <i class="fas fa-arrow-left"></i>
+          Back to Dashboard
+        </a>
+      {% endif %}
+    </div>
+  </div>
+</nav>
+
+<div class="container my-5">
+  <div class="row">
+    <div class="col-12">
+      <h2 class="mb-4" style="color: #333; font-weight: 700;">
+        <i class="fas fa-bell me-2"></i>
+        Notifications
+      </h2>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-8 col-md-10 mx-auto">
+      {% if notifications %}
+        {% for notification in notifications %}
+        <div class="notification-item {% if not notification.is_read %}unread{% endif %}">
+          <div class="d-flex align-items-start gap-3">
+            <div class="notification-icon {{ notification.type }}">
+              {% if notification.type == 'investment_request' %}
+                <i class="fas fa-dollar-sign"></i>
+              {% elif notification.type == 'success' %}
+                <i class="fas fa-check"></i>
+              {% elif notification.type == 'info' %}
+                <i class="fas fa-info"></i>
+              {% elif notification.type == 'warning' %}
+                <i class="fas fa-exclamation"></i>
+              {% else %}
+                <i class="fas fa-bell"></i>
+              {% endif %}
+            </div>
+            <div class="flex-grow-1">
+              <div class="notification-title">{{ notification.title }}</div>
+              <div class="notification-message">{{ notification.message }}</div>
+              <div class="notification-time">
+                <i class="fas fa-clock me-1"></i>
+                {{ notification.created_at }}
+              </div>
+            </div>
+            {% if not notification.is_read %}
+            <div class="badge bg-primary">New</div>
+            {% endif %}
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+        <div class="empty-state">
+          <i class="fas fa-bell-slash"></i>
+          <h4 class="text-muted">No notifications yet</h4>
+          <p class="text-muted">When you receive investment requests or updates, they'll appear here.</p>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

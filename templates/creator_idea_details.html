@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{{ idea.title }} - My Idea Details | Neurona</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f4f7f9;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    .navbar {
+      background-color: #000000 !important;
+      padding: 1rem 0;
+    }
+
+    .navbar-logo {
+      height: 50px;
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: #e9ecef;
+      border: 1px solid #ced4da;
+      border-radius: 8px;
+      color: #333;
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .back-btn:hover {
+      background: #dee2e6;
+      color: #333;
+    }
+
+    .idea-details-section {
+      background: #fff;
+      border-radius: 12px;
+      padding: 40px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .idea-image {
+      width: 100%;
+      height: 400px;
+      object-fit: cover;
+      border-radius: 12px;
+      margin-bottom: 24px;
+    }
+
+    .idea-title {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: #000;
+      margin-bottom: 12px;
+    }
+
+    .idea-meta {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+
+    .meta-badge {
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .category-badge {
+      background: rgba(0, 123, 255, 0.1);
+      color: #007bff;
+    }
+
+    .stage-badge {
+      background: rgba(40, 167, 69, 0.1);
+      color: #28a745;
+    }
+
+    .idea-summary {
+      font-size: 1rem;
+      color: #6c757d;
+      margin-bottom: 24px;
+      line-height: 1.7;
+    }
+
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      margin-bottom: 32px;
+    }
+
+    .metric-card {
+      background: #f8f9fa;
+      border: 1px solid #e9ecef;
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    .metric-value {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #000;
+      margin-bottom: 4px;
+    }
+
+    .metric-label {
+      font-size: 14px;
+      color: #6c757d;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .progress-section {
+      margin-top: 20px;
+    }
+
+    .progress-bar-container {
+      height: 12px;
+      background-color: #e9ecef;
+      border-radius: 6px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #007bff, #6c757d);
+      border-radius: 6px;
+      transition: width 0.4s ease-in-out;
+    }
+
+    .progress-text {
+      font-weight: 600;
+      color: #007bff;
+      margin-top: 8px;
+      display: block;
+    }
+
+    .description-section {
+      background: #f8f9fa;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+
+    .section-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #000;
+      margin-bottom: 16px;
+    }
+
+    .tags-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .tag-badge {
+      background: rgba(0, 123, 255, 0.1);
+      color: #007bff;
+      font-size: 12px;
+      font-weight: 500;
+      padding: 4px 12px;
+      border-radius: 16px;
+    }
+
+    .action-buttons {
+      margin-top: 24px;
+      display: flex;
+      gap: 16px;
+    }
+
+    .btn-edit {
+      background-color: #6c757d;
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: background-color 0.3s;
+    }
+
+    .btn-edit:hover {
+      background-color: #5a6268;
+      color: #fff;
+    }
+
+    .btn-delete {
+      background-color: #dc3545;
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: background-color 0.3s;
+      cursor: pointer;
+    }
+
+    .btn-delete:hover {
+      background-color: #c82333;
+      color: #fff;
+    }
+
+    /* Modal styles */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    .modal-content {
+      background: #fff;
+      padding: 24px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      max-width: 400px;
+      width: 90%;
+    }
+    .modal-content h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+    .modal-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark py-3">
+  <div class="container">
+    <div class="logo">
+      <img src="{{ url_for('static', filename='images/logo_white.png') }}" class="navbar-logo" alt="Neurona Logo">
+    </div>
+    <div class="ms-auto">
+      <a href="{{ url_for('creator_dashboard') }}" class="back-btn">
+        <i class="fas fa-arrow-left"></i>
+        Back to Dashboard
+      </a>
+    </div>
+  </div>
+</nav>
+
+<div class="container my-5">
+  <div class="idea-details-section">
+    {% if idea.product_image %}
+      <img src="{{ url_for('static', filename='uploads/' + idea.product_image) }}" alt="{{ idea.title }}" class="idea-image">
+    {% else %}
+      <img src="{{ url_for('static', filename='images/idea.jpg') }}" alt="{{ idea.title }}" class="idea-image">
+    {% endif %}
+
+    <div class="row">
+      <div class="col-lg-8">
+        <h1 class="idea-title">{{ idea.title }}</h1>
+        <div class="idea-meta">
+          <span class="meta-badge category-badge">{{ idea.category }}</span>
+          <span class="meta-badge stage-badge">{{ idea.stage or 'Idea' }}</span>
+        </div>
+        <p class="idea-summary">{{ idea.summary }}</p>
+
+        {% if idea.tags %}
+        <div class="tags-container">
+          {% for tag in idea.tags.split(',') %}
+          <span class="tag-badge">{{ tag.strip() }}</span>
+          {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <hr class="my-4">
+
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <div class="metric-value">BDT {{ "{:,.0f}".format(total_raised) }}</div>
+        <div class="metric-label">Amount Raised</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-value">BDT {{ "{:,.0f}".format(idea.funding_needed) }}</div>
+        <div class="metric-label">Funding Goal</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-value">{{ "{:.2f}".format(total_equity_allocated) }}%</div>
+        <div class="metric-label">Equity Allocated</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-value">{{ "{:.2f}".format(idea.equity_offered - total_equity_allocated) }}%</div>
+        <div class="metric-label">Equity Available</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-value">{{ investments|length }}</div>
+        <div class="metric-label">Total Investors</div>
+      </div>
+    </div>
+
+    <!-- Corrected Progress Bar -->
+    {% set progress = ((total_raised / idea.funding_needed * 100) if idea.funding_needed > 0 else 0) %}
+    {% set progress_capped = progress if progress < 100 else 100 %}
+<div class="progress-section">
+  <div class="progress-bar-container">
+    <div class="progress-fill"></div>
+  </div>
+  <span class="progress-text">
+    {{ progress | round(2) }}&#37; of BDT {{ "{:,.0f}".format(idea.funding_needed) }} raised
+  </span>
+</div>
+
+
+    {% if investments %}
+    <div class="description-section mt-4">
+      <h2 class="section-title">Investment Details</h2>
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Investor</th>
+              <th>Amount</th>
+              <th>Equity</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for investment in investments %}
+            <tr>
+              <td>{{ investment.full_name or investment.username }}</td>
+              <td>BDT {{ "{:,.0f}".format(investment.amount) }}</td>
+              <td>{{ "{:.2f}".format(investment.equity_percentage) }}%</td>
+              <td>{{ investment.created_at.split(' ')[0] if investment.created_at else 'N/A' }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    {% endif %}
+
+    {% if idea.description %}
+    <div class="description-section mt-4">
+      <h2 class="section-title">Detailed Description</h2>
+      <p>{{ idea.description }}</p>
+    </div>
+    {% endif %}
+
+    <div class="action-buttons">
+      <a href="#" class="btn-edit">
+        <i class="fas fa-edit"></i>
+        Edit Details
+      </a>
+      <a href="#" class="btn-delete" id="delete-btn">
+        <i class="fas fa-trash-alt"></i>
+        Delete Idea
+      </a>
+    </div>
+
+  </div>
+</div>
+
+<!-- Custom Delete Confirmation Modal -->
+<div class="modal-overlay" id="deleteModal">
+  <div class="modal-content">
+    <h3>Are you sure?</h3>
+    <p>This action cannot be undone. Do you really want to delete this idea?</p>
+    <div class="modal-buttons">
+      <a href="#" class="btn btn-secondary" onclick="document.getElementById('deleteModal').style.display='none'; return false;">Cancel</a>
+      <form action="{{ url_for('delete_creator_idea', idea_id=idea.id) }}" method="POST" style="display:inline;">
+        <button type="submit" class="btn btn-danger">Yes, Delete</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  document.getElementById('delete-btn').addEventListener('click', function(event) {
+    event.preventDefault();
+    document.getElementById('deleteModal').style.display = 'flex';
+  });
+  
+  // Set progress bar width
+  document.addEventListener('DOMContentLoaded', function() {
+    const progressFill = document.querySelector('.progress-fill');
+    const progressText = document.querySelector('.progress-text');
+    if (progressFill && progressText) {
+      const progress = progressText.textContent.match(/(\d+\.?\d*)%/);
+      if (progress && progress[1]) {
+        progressFill.style.width = progress[1] + '%';
+      }
+    }
+  });
+</script>
+</body>
+</html>

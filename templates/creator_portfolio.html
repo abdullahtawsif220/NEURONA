@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Portfolio - {{ username }} | Neurona</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/creator_dashboard.css') }}"/>
+  <style>
+    /* --- Header Section --- */
+    .portfolio-header {
+      background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+      color: white;
+      padding: 60px 0;
+      margin-bottom: 40px;
+    }
+
+    /* --- Stats Grid --- */
+    .portfolio-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 24px;
+      margin-bottom: 40px;
+    }
+
+    .stat-card {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 24px;
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .stat-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      color: #ffffff;
+      margin: 0 auto 16px;
+    }
+
+    .stat-icon.primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    .stat-icon.success {
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    }
+    .stat-icon.warning {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    }
+    .stat-icon.info {
+      background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #1a1a1a;
+      margin-bottom: 8px;
+    }
+
+    .stat-label {
+      font-size: 14px;
+      color: rgba(0, 0, 0, 0.6);
+      font-weight: 500;
+    }
+
+    /* --- Portfolio Section --- */
+    .portfolio-section {
+      margin-bottom: 48px;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    .section-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: #404145;
+      margin: 0;
+    }
+
+    .filter-tabs {
+      display: flex;
+      gap: 8px;
+    }
+
+    .filter-tab {
+      padding: 8px 16px;
+      background: transparent;
+      border: 1px solid #e4e5e7;
+      border-radius: 20px;
+      color: #404145;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .filter-tab.active {
+      background: #404145;
+      color: white;
+    }
+
+    /* --- Ideas Grid --- */
+    .ideas-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 24px;
+    }
+
+    .portfolio-idea-card {
+      background: #ffffff;
+      border: 1px solid #e4e5e7;
+      border-radius: 12px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .portfolio-idea-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    .idea-status-badge {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      z-index: 2;
+    }
+
+    .status-active {
+      background: #10b981;
+      color: white;
+    }
+
+    .status-funded {
+      background: #3b82f6;
+      color: white;
+    }
+
+    .status-draft {
+      background: #f59e0b;
+      color: white;
+    }
+
+    .idea-image {
+      height: 200px;
+      object-fit: cover;
+      width: 100%;
+    }
+
+    .idea-content {
+      padding: 20px;
+    }
+
+    .idea-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #404145;
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+
+    .idea-summary {
+      font-size: 14px;
+      color: #74767e;
+      margin-bottom: 16px;
+      line-height: 1.4;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .idea-metrics {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .metric {
+      text-align: center;
+    }
+
+    .metric-value {
+      font-size: 16px;
+      font-weight: 700;
+      color: #404145;
+      margin-bottom: 4px;
+    }
+
+    .metric-label {
+      font-size: 12px;
+      color: #74767e;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .idea-progress {
+      margin-bottom: 16px;
+    }
+
+    .progress-bar-custom {
+      height: 6px;
+      background: #e4e5e7;
+      border-radius: 3px;
+      overflow: hidden;
+      margin-bottom: 8px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #10b981, #3b82f6);
+      border-radius: 3px;
+      transition: width 0.3s ease;
+    }
+
+    .progress-text {
+      font-size: 12px;
+      color: #74767e;
+      font-weight: 500;
+    }
+
+    .idea-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .action-btn {
+      flex: 1;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      text-decoration: none;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .btn-view {
+      background: #f8f9fa;
+      color: #404145;
+      border: 1px solid #e4e5e7;
+    }
+
+    .btn-view:hover {
+      background: #e9ecef;
+      color: #404145;
+    }
+
+    .btn-edit {
+      background: #3b82f6;
+      color: white;
+      border: 1px solid #3b82f6;
+    }
+
+    .btn-edit:hover {
+      background: #2563eb;
+      color: white;
+    }
+
+    @media (max-width: 768px) {
+      .ideas-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .portfolio-stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .section-header {
+        flex-direction: column;
+        gap: 16px;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark py-3">
+  <div class="container d-flex justify-content-between align-items-center">
+    <div class="logo">
+      <img src="{{ url_for('static', filename='images/logo_white.png') }}" class="navbar-logo" alt="Neurona Logo">
+    </div>
+
+    <div class="profile-section d-flex align-items-center gap-3">
+      <span class="creator-name">{{ username }}</span>
+      {% if verified == 1 %}
+        <span class="verification-badge ms-2">Verified</span>
+      {% endif %}
+
+      <div class="profile-dropdown position-relative">
+        <button class="profile-button">
+          <img src="{{ url_for('static', filename='images/user_logo.png') }}" alt="Profile" class="profile-img" />
+          <i class="fas fa-chevron-down dropdown-arrow"></i>
+        </button>
+
+        <div class="dropdown-content">
+          <a href="{{ url_for('profile') }}">Profile</a>
+          <a href="{{ url_for('creator_dashboard') }}">Dashboard</a>
+          <a href="{{ url_for('notifications') }}">Notifications</a>
+          <a href="{{ url_for('creator_investment_requests') }}">Investment Requests</a>
+          <a href="{{ url_for('creator_wallet') }}">Wallet</a>
+          <a href="{{ url_for('creator_portfolio') }}">Portfolio</a>
+          <a href="{{ url_for('logout') }}">Logout</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- Portfolio Header -->
+<section class="portfolio-header">
+  <div class="container text-center">
+    <h1 class="mb-3">My Portfolio</h1>
+    <p class="lead">Track your ideas, investments, and growth journey</p>
+  </div>
+</section>
+
+<div class="container">
+  <!-- Portfolio Stats -->
+  <div class="portfolio-stats">
+    <div class="stat-card">
+      <div class="stat-icon primary">
+        <i class="fas fa-lightbulb"></i>
+      </div>
+      <div class="stat-value">{{ portfolio_stats.total_ideas or 0 }}</div>
+      <div class="stat-label">Total Ideas</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon success">
+        <i class="fas fa-eye"></i>
+      </div>
+      <div class="stat-value">{{ portfolio_stats.total_views or 0 }}</div>
+      <div class="stat-label">Total Views</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon warning">
+        <i class="fas fa-handshake"></i>
+      </div>
+      <div class="stat-value">{{ portfolio_stats.investment_requests or 0 }}</div>
+      <div class="stat-label">Investment Requests</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon info">
+        <i class="fas fa-dollar-sign"></i>
+      </div>
+      <div class="stat-value">BDT {{ "{:,.0f}".format(portfolio_stats.total_funding or 0) }}</div>
+      <div class="stat-label">Funding Raised</div>
+    </div>
+  </div>
+
+  <!-- Ideas Portfolio -->
+  <div class="portfolio-section">
+    <div class="section-header">
+      <h2 class="section-title">My Ideas</h2>
+      <div class="filter-tabs">
+        <button class="filter-tab active" onclick="filterIdeas('all')">All</button>
+        <button class="filter-tab" onclick="filterIdeas('active')">Active</button>
+        <button class="filter-tab" onclick="filterIdeas('funded')">Funded</button>
+        <button class="filter-tab" onclick="filterIdeas('draft')">Draft</button>
+      </div>
+    </div>
+
+    <div class="ideas-grid">
+      {% for idea in ideas %}
+      <div class="portfolio-idea-card" data-status="{{ idea.status or 'active' }}">
+        <div class="idea-status-badge status-{{ idea.status or 'active' }}">
+          {{ idea.status or 'Active' }}
+        </div>
+        
+        {% if idea.product_image %}
+          <img src="{{ url_for('static', filename='uploads/' + idea.product_image) }}" class="idea-image" alt="Idea Image">
+        {% else %}
+          <img src="{{ url_for('static', filename='images/idea.jpg') }}" class="idea-image" alt="Default Idea Image">
+        {% endif %}
+        
+        <div class="idea-content">
+          <h3 class="idea-title">{{ idea.title }}</h3>
+          <p class="idea-summary">{{ idea.summary }}</p>
+          
+          <div class="idea-metrics">
+            <div class="metric">
+              <div class="metric-value">BDT {{ "{:,.0f}".format(idea.funding_needed) }}</div>
+              <div class="metric-label">Funding Goal</div>
+            </div>
+            <div class="metric">
+              <div class="metric-value">{{ idea.equity_offered }}%</div>
+              <div class="metric-label">Equity</div>
+            </div>
+          </div>
+
+          <!-- Corrected Progress Bar -->
+          {% set progress = ((idea.funded_amount or 0) / idea.funding_needed * 100) if idea.funding_needed > 0 else 0 %}
+          {% set progress_capped = progress if progress < 100 else 100 %}
+          <div class="idea-progress">
+            <div class="progress-bar-custom">
+              <div class="progress-fill progress-fill-{{ idea.id }}"></div>
+            </div>
+            <div class="progress-text">
+              BDT {{ "{:,.0f}".format(idea.funded_amount or 0) }} raised of BDT {{ "{:,.0f}".format(idea.funding_needed) }}
+            </div>
+          </div>
+
+          
+          <div class="idea-actions">
+            <a href="{{ url_for('creator_idea_details', idea_id=idea.id) }}" class="action-btn btn-view">
+              <i class="fas fa-eye me-1"></i>View
+            </a>
+            <a href="#" class="action-btn btn-edit" onclick="alert('Edit functionality will be implemented in the next phase!')">
+              <i class="fas fa-edit me-1"></i>Edit
+            </a>
+          </div>
+        </div>
+      </div>
+      {% else %}
+      <div class="col-12 text-center py-5">
+        <h4 class="text-muted">No ideas in your portfolio yet</h4>
+        <p class="text-muted">Start by uploading your first innovative idea!</p>
+        <a href="{{ url_for('upload_idea') }}" class="btn btn-primary">Upload Your First Idea</a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+function filterIdeas(status) {
+  event.preventDefault();
+  document.querySelectorAll('.filter-tab').forEach(tab => tab.classList.remove('active'));
+  event.target.classList.add('active');
+
+  const ideas = document.querySelectorAll('.portfolio-idea-card');
+  ideas.forEach(idea => {
+    if(status === 'all' || idea.dataset.status === status) {
+      idea.style.display = 'block';
+    } else {
+      idea.style.display = 'none';
+    }
+  });
+}
+</script>
+
+</body>
+</html>

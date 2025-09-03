@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Investment Details - {{ idea.title }} | Neurona</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+  <style>
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #ffffff;
+      color: #1a1a1a;
+      line-height: 1.6;
+    }
+
+    .navbar {
+      background-color: #000000 !important;
+      padding: 1rem 0;
+      box-shadow: 0 2px 4px rgba(255, 255, 255, 0.1);
+    }
+
+    .navbar-logo {
+      height: 50px;
+      width: auto;
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: rgba(0, 0, 0, 0.05);
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      color: #1a1a1a;
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .back-btn:hover {
+      background: rgba(0, 0, 0, 0.1);
+      color: #1a1a1a;
+    }
+
+    .investment-hero {
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(147, 51, 234, 0.05) 100%);
+      padding: 60px 0;
+      margin-bottom: 40px;
+    }
+
+    .investment-image {
+      width: 100%;
+      height: 400px;
+      object-fit: cover;
+      border-radius: 16px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    }
+
+    .investment-title {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: #1a1a1a;
+      margin-bottom: 16px;
+    }
+
+    .investment-summary {
+      font-size: 1.2rem;
+      color: rgba(0, 0, 0, 0.7);
+      margin-bottom: 32px;
+      line-height: 1.7;
+    }
+
+    .price-card {
+      background: rgba(0, 0, 0, 0.02);
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      border-radius: 16px;
+      padding: 32px;
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .price-value {
+      font-size: 3rem;
+      font-weight: 800;
+      color: #1a1a1a;
+      margin-bottom: 8px;
+    }
+
+    .price-label {
+      font-size: 16px;
+      color: rgba(0, 0, 0, 0.6);
+      margin-bottom: 24px;
+    }
+
+    .document-section {
+      background: rgba(0, 0, 0, 0.02);
+      border-radius: 16px;
+      padding: 32px;
+      margin-bottom: 32px;
+    }
+
+    .section-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin-bottom: 16px;
+    }
+
+    .document-card {
+      background: #ffffff;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      border-radius: 12px;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      transition: all 0.3s ease;
+    }
+
+    .document-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    .document-icon {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      font-size: 20px;
+    }
+
+    .document-info h5 {
+      font-size: 16px;
+      font-weight: 600;
+      color: #1a1a1a;
+      margin-bottom: 4px;
+    }
+
+    .document-info p {
+      color: rgba(0, 0, 0, 0.6);
+      margin: 0;
+      font-size: 14px;
+    }
+
+    .download-btn {
+      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+      color: #ffffff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .download-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
+      color: #ffffff;
+    }
+
+    .payment-section {
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(147, 51, 234, 0.05) 100%);
+      border: 1px solid rgba(59, 130, 246, 0.15);
+      border-radius: 16px;
+      padding: 32px;
+      text-align: center;
+    }
+
+    .payment-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin-bottom: 16px;
+    }
+
+    .payment-description {
+      color: rgba(0, 0, 0, 0.6);
+      margin-bottom: 24px;
+    }
+
+    .proceed-payment-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 32px;
+      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+      color: #ffffff;
+      text-decoration: none;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 16px;
+      transition: all 0.3s ease;
+      border: none;
+    }
+
+    .proceed-payment-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
+      color: #ffffff;
+    }
+
+    @media (max-width: 768px) {
+      .investment-title {
+        font-size: 2rem;
+      }
+
+      .price-value {
+        font-size: 2.5rem;
+      }
+
+      .document-card {
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Top Navigation Bar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark py-3">
+  <div class="container">
+    <div class="logo">
+      <img src="{{ url_for('static', filename='images/logo_white.png') }}" class="navbar-logo" alt="Neurona Logo">
+    </div>
+    <div class="ms-auto">
+      <a href="{{ url_for('investor_pending_investments') }}" class="back-btn">
+        <i class="fas fa-arrow-left"></i>
+        Back to Investments
+      </a>
+    </div>
+  </div>
+</nav>
+
+<!-- Main Content -->
+<div class="container my-5">
+  <!-- Hero Section -->
+  <section class="investment-hero">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-6">
+          {% if idea.product_image %}
+            <img src="{{ url_for('static', filename='uploads/' + idea.product_image) }}" alt="{{ idea.title }}" class="investment-image">
+          {% else %}
+            <img src="{{ url_for('static', filename='images/idea.jpg') }}" alt="{{ idea.title }}" class="investment-image">
+          {% endif %}
+        </div>
+        <div class="col-lg-6">
+          <h1 class="investment-title">{{ idea.title }}</h1>
+          <p class="investment-summary">{{ idea.summary }}</p>
+          
+          <div class="price-card">
+            <div class="price-value">BDT {{ "{:,.0f}".format(investment_amount) }}</div>
+            <div class="price-label">Your Investment Amount</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Business Plan Section -->
+  <section class="document-section">
+    <h2 class="section-title">Business Plan</h2>
+    <div class="document-card">
+      <div class="document-icon">
+        <i class="fas fa-file-pdf"></i>
+      </div>
+      <div class="document-info">
+        <h5>Business Plan Document</h5>
+        <p>Comprehensive business plan and strategy</p>
+      </div>
+      <a href="#" class="download-btn" onclick="alert('Business plan download will be implemented in the next phase!')">
+        <i class="fas fa-download me-2"></i>
+        Download
+      </a>
+    </div>
+  </section>
+
+  <!-- Payment Section -->
+  <section class="payment-section">
+    <h2 class="payment-title">Ready to Proceed?</h2>
+    <p class="payment-description">
+      Complete your investment by proceeding to secure payment and agreement signing.
+    </p>
+    <button class="proceed-payment-btn" onclick="showAgreementModal()">
+      <i class="fas fa-credit-card"></i>
+      Proceed to Payment
+    </button>
+  </section>
+</div>
+
+<!-- Agreement Modal -->
+<div class="modal fade" id="agreementModal" tabindex="-1" aria-labelledby="agreementModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content" style="background: rgba(0, 0, 0, 0.95); color: white; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px;">
+      <div class="modal-header" style="border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
+        <h5 class="modal-title" id="agreementModalLabel">Investment Agreement</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" style="max-height: 400px; overflow-y: auto;">
+        <div class="agreement-content">
+          <h6 class="text-warning mb-3">INVESTMENT AGREEMENT TERMS</h6>
+          
+          <div class="mb-3">
+            <strong>Investment Details:</strong>
+            <ul class="mt-2">
+              <li>Investment Amount: BDT {{ "{:,.0f}".format(investment_amount) }}</li>
+              <li>Project: {{ idea.title }}</li>
+              <li>Creator: {{ idea.username }}</li>
+              <li>Your Equity: {{ "%.2f"|format((investment_amount / idea.funding_needed) * idea.equity_offered) }}%</li>
+            </ul>
+          </div>
+          
+          <div class="agreement-text" style="background: rgba(255, 255, 255, 0.05); padding: 20px; border-radius: 8px; font-size: 14px; line-height: 1.6;">
+            <p><strong>1. Investment Terms:</strong> By proceeding with this investment, you agree to invest BDT {{ "{:,.0f}".format(investment_amount) }} in exchange for {{ "%.2f"|format((investment_amount / idea.funding_needed) * idea.equity_offered) }}% equity in the project "{{ idea.title }}".</p>
+            
+            <p><strong>2. Risk Acknowledgment:</strong> You acknowledge that startup investments carry significant risk, including the potential loss of your entire investment. Past performance does not guarantee future results.</p>
+            
+            <p><strong>3. Payment Terms:</strong> Upon agreement, the investment amount will be immediately deducted from your Neurona wallet and transferred to the creator's account.</p>
+            
+            <p><strong>4. Equity Rights:</strong> Your equity percentage grants you proportional rights to future profits, dividends, and decision-making as outlined in the project's governance structure.</p>
+            
+            <p><strong>5. Platform Terms:</strong> This investment is facilitated through Neurona platform and is subject to our Terms of Service and Privacy Policy.</p>
+            
+            <p><strong>6. Dispute Resolution:</strong> Any disputes will be resolved through binding arbitration in accordance with Bangladesh law.</p>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer" style="border-top: 1px solid rgba(255, 255, 255, 0.1);">
+        <div class="form-check mb-3 w-100">
+          <input class="form-check-input" type="checkbox" id="agreeTerms" onchange="toggleProceedButton()">
+          <label class="form-check-label text-light" for="agreeTerms">
+            I have read and agree to the investment terms and conditions
+          </label>
+        </div>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-success" id="proceedPaymentBtn" disabled onclick="processPayment()">
+          <i class="fas fa-check"></i>
+          Agree & Process Payment
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Success Modal -->
+<div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content" style="background: linear-gradient(135deg, #10b981, #059669); color: white; border: none; border-radius: 16px;">
+      <div class="modal-header" style="border-bottom: 1px solid rgba(255, 255, 255, 0.2);">
+        <h5 class="modal-title" id="successModalLabel">
+          <i class="fas fa-check-circle me-2"></i>
+          Investment Successful!
+        </h5>
+      </div>
+      <div class="modal-body text-center">
+        <div class="success-icon mb-3">
+          <i class="fas fa-trophy" style="font-size: 3rem; color: #ffd700;"></i>
+        </div>
+        <h4 class="mb-3">Congratulations!</h4>
+        <p class="mb-2">You have successfully invested <strong>BDT {{ "{:,.0f}".format(investment_amount) }}</strong></p>
+        <p class="mb-3">You now own <strong>{{ "%.2f"|format((investment_amount / idea.funding_needed) * idea.equity_offered) }}%</strong> equity in <strong>{{ idea.title }}</strong></p>
+        <div class="alert alert-light text-dark" role="alert">
+          <i class="fas fa-info-circle me-2"></i>
+          A confirmation has been sent to your notifications
+        </div>
+      </div>
+      <div class="modal-footer" style="border-top: 1px solid rgba(255, 255, 255, 0.2);">
+            <a href="{{ url_for('investor_dashboard') }}" class="btn btn-light">
+              <i class="fas fa-home me-2"></i>
+              Go to Dashboard
+            </a>
+
+        <a href="{{ url_for('investor_pending_investments') }}" 
+            class="btn btn-outline-light">
+         Pending Investments
+        </a>
+          <i class="fas fa-chart-line me-2"></i>
+          View My Investments
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- ✅ Server-side data safely injected as JSON -->
+<script id="server-data" type="application/json">
+  {
+    "requestId": {{ request_id | tojson }},
+    "ideaId": {{ idea.id | tojson }},
+    "investmentAmount": {{ investment_amount | tojson }},
+    "walletBalance": {{ wallet_balance|default(0)|float|round(2) }}
+  }
+</script>
+
+<script>
+  // ✅ Parse JSON once
+  const serverData = JSON.parse(document.getElementById('server-data').textContent);
+  const requestId = serverData.requestId;
+  const ideaId = serverData.ideaId;
+  const investmentAmount = serverData.investmentAmount;
+
+  function showAgreementModal() {
+    const modal = new bootstrap.Modal(document.getElementById('agreementModal'));
+    modal.show();
+  }
+
+  function toggleProceedButton() {
+    const checkbox = document.getElementById('agreeTerms');
+    const button = document.getElementById('proceedPaymentBtn');
+    button.disabled = !checkbox.checked;
+  }
+
+  async function processPayment() {
+    const button = document.getElementById('proceedPaymentBtn');
+    const originalText = '<i class="fas fa-check"></i> Agree & Process Payment';
+
+    // Disable button + show spinner
+    button.disabled = true;
+    button.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Processing...';
+
+    try {
+      // Check wallet balance from server data
+      const walletBalance = serverData.walletBalance;
+      
+      if (walletBalance < investmentAmount) {
+        alert('Insufficient wallet balance. Please add funds to your wallet first.');
+        button.disabled = false;
+        button.innerHTML = originalText;
+        return;
+      }
+
+      const response = await fetch('/process_investment_payment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          request_id: requestId,
+          idea_id: ideaId,
+          investment_amount: investmentAmount
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const result = await response.json();
+
+      if (result.success) {
+        // Hide agreement modal safely
+        const agreementModalEl = document.getElementById('agreementModal');
+        const agreementModal = bootstrap.Modal.getInstance(agreementModalEl);
+        if (agreementModal) agreementModal.hide();
+
+        // Show success modal after short delay
+        setTimeout(() => {
+          const successModal = new bootstrap.Modal(document.getElementById('successModal'));
+          successModal.show();
+        }, 500);
+      } else {
+        alert('Payment failed: ' + (result.message || 'Unknown error'));
+        button.disabled = false;
+        button.innerHTML = originalText;
+      }
+    } catch (error) {
+      console.error('Payment error:', error);
+      alert('Payment processing failed: ' + error.message + '. Please try again.');
+      button.disabled = false;
+      button.innerHTML = originalText;
+    }
+  }
+</script>
+
+</body>
+</html>

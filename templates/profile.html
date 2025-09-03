@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Profile - {{ user.username }} | Neurona</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+  <style>
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #f8f9fa;
+      color: #1a1a1a;
+      line-height: 1.6;
+    }
+
+    .navbar {
+      background-color: #000000 !important;
+      padding: 1rem 0;
+      box-shadow: 0 2px 4px rgba(255, 255, 255, 0.1);
+    }
+
+    .navbar-logo {
+      height: 50px;
+      width: auto;
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      color: #ffffff;
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .back-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+    }
+
+    .profile-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+
+    .profile-header {
+      background: linear-gradient(135deg, #052c65 0%, #1a1a1a 100%);
+      border-radius: 20px;
+      padding: 40px;
+      margin-bottom: 30px;
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .profile-header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 200px;
+      height: 200px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      transform: translate(50px, -50px);
+    }
+
+    .profile-header-content {
+      position: relative;
+      z-index: 2;
+    }
+
+    .profile-avatar-container {
+      display: flex;
+      align-items: center;
+      gap: 30px;
+      margin-bottom: 20px;
+    }
+
+    .profile-avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      border: 4px solid rgba(255, 255, 255, 0.3);
+      background: rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+      color: white;
+      flex-shrink: 0;
+    }
+
+    .profile-basic-info h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .profile-username {
+      font-size: 1.2rem;
+      opacity: 0.9;
+      margin-bottom: 12px;
+    }
+
+    .profile-role {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 14px;
+      margin-bottom: 16px;
+    }
+
+    .verification-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 14px;
+      margin-left: 12px;
+    }
+
+    .verification-status.verified {
+      background: rgba(16, 185, 129, 0.2);
+      color: #10b981;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .verification-status.pending {
+      background: rgba(245, 158, 11, 0.2);
+      color: #f59e0b;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    .verification-status.declined {
+      background: rgba(239, 68, 68, 0.2);
+      color: #ef4444;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .profile-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+    }
+
+    .profile-section {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 30px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      margin-bottom: 20px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid #f8f9fa;
+    }
+
+    .section-header h3 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin: 0;
+    }
+
+    .section-header i {
+      color: #667eea;
+      font-size: 20px;
+    }
+
+    .info-item {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 20px;
+    }
+
+    .info-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.6);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .info-value {
+      font-size: 16px;
+      font-weight: 500;
+      color: #495057;
+      line-height: 1.5;
+    }
+
+    .tagline {
+      font-style: italic;
+      color: #667eea;
+      font-weight: 500;
+      background: rgba(102, 126, 234, 0.1);
+      padding: 12px 16px;
+      border-radius: 8px;
+      border-left: 4px solid #667eea;
+    }
+
+    .skills-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .skill-tag {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .investment-focus-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      background: #f8f9fa;
+      border-radius: 8px;
+      margin-bottom: 8px;
+    }
+
+    .investment-focus-item i {
+      color: #667eea;
+      font-size: 16px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .stat-card {
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .stat-value {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: #667eea;
+      margin-bottom: 4px;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: rgba(0, 0, 0, 0.6);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .edit-profile-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #ffffff;
+      text-decoration: none;
+      border-radius: 12px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      border: none;
+      margin-top: 20px;
+    }
+
+    .edit-profile-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+      color: #ffffff;
+    }
+
+    .full-width {
+      grid-column: 1 / -1;
+    }
+
+    .success-story {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.1));
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+
+    .success-story h5 {
+      color: #059669;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .past-investment {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px;
+      background: #f8f9fa;
+      border-radius: 8px;
+      margin-bottom: 12px;
+      border-left: 4px solid #667eea;
+    }
+
+    .investment-info h6 {
+      margin: 0 0 4px 0;
+      font-weight: 600;
+      color: #1a1a1a;
+    }
+
+    .investment-info small {
+      color: rgba(0, 0, 0, 0.6);
+    }
+
+    .investment-amount {
+      font-weight: 700;
+      color: #059669;
+    }
+
+    @media (max-width: 768px) {
+      .profile-content {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+
+      .profile-avatar-container {
+        flex-direction: column;
+        text-align: center;
+        gap: 20px;
+      }
+
+      .profile-basic-info h1 {
+        font-size: 2rem;
+      }
+
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark py-3">
+  <div class="container">
+    <div class="logo">
+      <img src="{{ url_for('static', filename='images/logo_white.png') }}" class="navbar-logo" alt="Neurona Logo">
+    </div>
+    <div class="ms-auto">
+      {% if user.role == 'creator' %}
+        <a href="{{ url_for('creator_dashboard') }}" class="back-btn">
+          <i class="fas fa-arrow-left"></i>
+          Back to Dashboard
+        </a>
+      {% else %}
+        <a href="{{ url_for('investor_dashboard') }}" class="back-btn">
+          <i class="fas fa-arrow-left"></i>
+          Back to Dashboard
+        </a>
+      {% endif %}
+    </div>
+  </div>
+</nav>
+
+<div class="profile-container">
+  <!-- Profile Header -->
+  <div class="profile-header">
+    <div class="profile-header-content">
+      <div class="profile-avatar-container">
+        <div class="profile-avatar">
+          <i class="fas fa-user"></i>
+        </div>
+        <div class="profile-basic-info">
+          <h1>{{ user.full_name or user.username }}</h1>
+          <div class="profile-username">@{{ user.username }}</div>
+          <div class="profile-role">
+            {% if user.role == 'creator' %}
+              <i class="fas fa-lightbulb"></i>
+              Creator
+            {% else %}
+              <i class="fas fa-chart-line"></i>
+              Investor
+            {% endif %}
+            
+            {% if user.verified == 1 %}
+              <div class="verification-status verified">
+                <i class="fas fa-check-circle"></i>
+                Verified
+              </div>
+            {% elif user.verified == 0 %}
+              <div class="verification-status pending">
+                <i class="fas fa-clock"></i>
+                Pending
+              </div>
+            {% else %}
+              <div class="verification-status declined">
+                <i class="fas fa-times-circle"></i>
+                Declined
+              </div>
+            {% endif %}
+          </div>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Statistics -->
+  {% if user.role == 'creator' %}
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-value">{{ stats.total_ideas or 0 }}</div>
+      <div class="stat-label">Ideas Submitted</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">{{ stats.total_investments or 0 }}</div>
+      <div class="stat-label">Accepted Requests</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">BDT {{ "{:,.0f}".format(stats.total_funding or 0) }}</div>
+      <div class="stat-label">Funding Raised</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">4.8</div>
+      <div class="stat-label">Rating</div>
+    </div>
+  </div>
+  {% else %}
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-value">{{ stats.active_investments or 0 }}</div>
+      <div class="stat-label">Active Investments</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">{{ stats.success_rate or 0 }}%</div>
+      <div class="stat-label">Success Rate</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">BDT {{ "{:,.0f}".format(stats.total_invested or 0) }}</div>
+      <div class="stat-label">Total Invested</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">12</div>
+      <div class="stat-label">Portfolio Companies</div>
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Profile Content -->
+  <div class="profile-content">
+    {% if user.role == 'creator' %}
+    <!-- Creator Profile Sections -->
+    
+    <!-- About Me -->
+    <div class="profile-section">
+      <div class="section-header">
+        <i class="fas fa-user-circle"></i>
+        <h3>About Me</h3>
+      </div>
+      <div class="info-item">
+        <div class="info-label">Bio</div>
+        <div class="info-value">
+          Passionate entrepreneur with 5+ years of experience in technology and innovation. 
+          I specialize in developing sustainable solutions that make a positive impact on society. 
+          My expertise spans across product development, team leadership, and strategic planning.
+        </div>
+      </div>
+      <div class="info-item">
+        <div class="info-label">Tagline</div>
+        <div class="tagline">
+          "Building the future of clean energy, one innovation at a time"
+        </div>
+      </div>
+      <div class="info-item">
+        <div class="info-label">Profession</div>
+        <div class="info-value">Software Engineer & Entrepreneur</div>
+      </div>
+    </div>
+
+    <!-- Skills & Expertise -->
+    <div class="profile-section">
+      <div class="section-header">
+        <i class="fas fa-cogs"></i>
+        <h3>Skills & Expertise</h3>
+      </div>
+      <div class="info-item">
+        <div class="info-label">Core Skills</div>
+        <div class="skills-container">
+          <span class="skill-tag">Product Development</span>
+          <span class="skill-tag">Team Leadership</span>
+          <span class="skill-tag">Strategic Planning</span>
+          <span class="skill-tag">Market Research</span>
+          <span class="skill-tag">Fundraising</span>
+          <span class="skill-tag">Technology</span>
+        </div>
+      </div>
+      <div class="info-item">
+        <div class="info-label">Industries</div>
+        <div class="skills-container">
+          <span class="skill-tag">Clean Energy</span>
+          <span class="skill-tag">Technology</span>
+          <span class="skill-tag">Sustainability</span>
+        </div>
+      </div>
+    </div>
+
+    {% else %}
+    <!-- Investor Profile Sections -->
+    
+    <!-- About Me -->
+    <div class="profile-section">
+      <div class="section-header">
+        <i class="fas fa-user-circle"></i>
+        <h3>About Me</h3>
+      </div>
+      <div class="info-item">
+        <div class="info-label">Bio</div>
+        <div class="info-value">
+          Experienced investor with a focus on early-stage startups in technology and healthcare sectors. 
+          I bring 10+ years of industry experience and a strong network of mentors and advisors. 
+          My goal is to support innovative entrepreneurs who are solving real-world problems.
+        </div>
+      </div>
+      <div class="info-item">
+        <div class="info-label">Investment Philosophy</div>
+        <div class="tagline">
+          "Investing in visionary founders who are building the future"
+        </div>
+      </div>
+    </div>
+
+    <!-- Investment Focus -->
+    <div class="profile-section">
+      <div class="section-header">
+        <i class="fas fa-bullseye"></i>
+        <h3>Investment Focus</h3>
+      </div>
+      <div class="info-item">
+        <div class="info-label">Preferred Industries</div>
+        <div>
+          <div class="investment-focus-item">
+            <i class="fas fa-laptop-code"></i>
+            <span>Technology & Software</span>
+          </div>
+          <div class="investment-focus-item">
+            <i class="fas fa-heartbeat"></i>
+            <span>Healthcare & Biotech</span>
+          </div>
+          <div class="investment-focus-item">
+            <i class="fas fa-credit-card"></i>
+            <span>Fintech</span>
+          </div>
+          <div class="investment-focus-item">
+            <i class="fas fa-leaf"></i>
+            <span>Green Energy & Sustainability</span>
+          </div>
+        </div>
+      </div>
+      <div class="info-item">
+        <div class="info-label">Investment Range</div>
+        <div class="info-value">BDT 50,000 - BDT 5,00,000</div>
+      </div>
+      <div class="info-item">
+        <div class="info-label">Stage Preference</div>
+        <div class="info-value">Seed, Pre-Series A</div>
+      </div>
+    </div>
+
+    <!-- Past Investments -->
+    <div class="profile-section full-width">
+      <div class="section-header">
+        <i class="fas fa-chart-bar"></i>
+        <h3>Past Investments</h3>
+      </div>
+      <div class="past-investment">
+        <div class="investment-info">
+          <h6>TechStart Solutions</h6>
+          <small>AI-powered customer service platform</small>
+        </div>
+        <div class="investment-amount">BDT 2,00,000</div>
+      </div>
+      <div class="past-investment">
+        <div class="investment-info">
+          <h6>GreenEnergy Innovations</h6>
+          <small>Solar panel efficiency optimization</small>
+        </div>
+        <div class="investment-amount">BDT 3,50,000</div>
+      </div>
+      <div class="past-investment">
+        <div class="investment-info">
+          <h6>HealthTech Pro</h6>
+          <small>Telemedicine platform for rural areas</small>
+        </div>
+        <div class="investment-amount">BDT 1,75,000</div>
+      </div>
+    </div>
+
+    <!-- Success Stories -->
+    <div class="profile-section full-width">
+      <div class="section-header">
+        <i class="fas fa-trophy"></i>
+        <h3>Success Stories</h3>
+      </div>
+      <div class="success-story">
+        <h5>TechStart Solutions - 300% ROI</h5>
+        <p>Successfully exited after 2 years with a 300% return on investment. The company was acquired by a major tech corporation and now serves over 10,000 businesses globally.</p>
+      </div>
+      <div class="success-story">
+        <h5>GreenEnergy Innovations - Ongoing Success</h5>
+        <p>Currently generating 150% revenue growth year-over-year. The company has expanded to 3 countries and is leading the solar efficiency market in Bangladesh.</p>
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Contact Information -->
+    <div class="profile-section full-width">
+      <div class="section-header">
+        <i class="fas fa-address-card"></i>
+        <h3>Contact Information</h3>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="info-item">
+            <div class="info-label">Email</div>
+            <div class="info-value">{{ user.email }}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Phone</div>
+            <div class="info-value">{{ user.phone or 'Not provided' }}</div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          {% if user.linkedin_id %}
+          <div class="info-item">
+            <div class="info-label">LinkedIn</div>
+            <div class="info-value">
+              <a href="{{ user.linkedin_id }}" target="_blank" style="color: #0077b5; text-decoration: none;">
+                <i class="fab fa-linkedin me-2"></i>View Profile
+              </a>
+            </div>
+          </div>
+          {% endif %}
+          <div class="info-item">
+            <div class="info-label">Member Since</div>
+            <div class="info-value">January 2025</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Profile Button -->
+  <div class="text-center">
+    <button class="edit-profile-btn" onclick="alert('Profile editing will be implemented in the next phase!')">
+      <i class="fas fa-edit"></i>
+      Edit Profile
+    </button>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

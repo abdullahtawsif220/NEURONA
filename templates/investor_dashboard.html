@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Investor Dashboard – Neurona</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/investor_dashboard.css') }}"/>
+</head>
+<body>
+
+<!-- Top Navigation Bar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark py-3">
+  <div class="container d-flex justify-content-between align-items-center">
+
+    <div class="logo">
+      <img src="{{ url_for('static', filename='images/logo_white.png') }}" class="navbar-logo" alt="Neurona Logo">
+    </div>
+
+<!-- search button -->
+
+      <div class="nav-center">
+      <div class="search-container">
+        <i class="fas fa-search search-icon"></i>
+        <input type="text" placeholder="Search ideas, categories, or creators..." class="search-input">
+      </div>
+    </div>
+
+    <div class="profile-section d-flex align-items-center gap-3">
+
+      <span class="investor-name">{{ username }}</span>
+      {% if verified == 1 %}
+        <span class="verification-badge ms-2">Verified</span>
+      {% endif %}
+
+      <div class="profile-dropdown position-relative">
+        <button class="profile-button">
+          <img src="{{ url_for('static', filename='images/user_logo.png') }}" alt="Profile" class="profile-img" />
+          <i class="fas fa-chevron-down dropdown-arrow"></i>
+        </button>
+
+        <div class="dropdown-content">
+          <a href="{{ url_for('profile') }}">Profile</a>
+          <a href="{{ url_for('investor_dashboard') }}">Dashboard</a>
+          <a href="{{ url_for('notifications') }}">Notifications</a>
+          <a href="{{ url_for('investor_pending_investments') }}">My Investments</a>
+          <a href="{{ url_for('investor_wallet') }}">Wallet</a>
+          <a href="{{ url_for('logout') }}">Logout</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+<!-- Flash Messages -->
+<div class="container-fluid px-4 pt-3">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }} alert-dismissible fade show custom-alert" role="alert">
+          <i class="fas fa-info-circle me-2"></i>
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+</div>
+
+<!-- Main Content -->
+<div class="main-container">
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-content">
+      <div class="hero-text">
+        <h1 class="hero-title">Welcome back, {{ username }}</h1>
+        <div class="hero-actions">
+          <p class="hero-subtitle">Discover your next investment opportunity
+          </a>
+        </div>
+      </div>
+
+      {% if verified == 0 or verified == 2 %}
+<div class="verification-prompt">
+  <div class="verification-content">
+    <i class="fas fa-shield-alt verification-icon"></i>
+    <div>
+      <h3>
+        {% if verified == 2 %}
+          Verification Declined
+        {% else %}
+          Complete Your Verification
+        {% endif %}
+      </h3>
+      <p>
+        {% if verified == 2 %}
+          Your previous request was declined. Please re-submit your details to try again.
+        {% else %}
+          Unlock full access to premium investment opportunities.
+        {% endif %}
+      </p>
+    </div>
+    <a href="{{ url_for('verify_investor') }}" class="verify-btn">
+      {% if verified == 2 %}
+        Re-verify Now
+      {% else %}
+        Verify Now
+      {% endif %}
+      <i class="fas fa-arrow-right"></i>
+    </a>
+  </div>
+</div>
+{% endif %}
+    </div>
+  </section>
+
+  <!-- Portfolio Overview -->
+  <section class="portfolio-section">
+
+    <div class="portfolio-grid">
+      <div class="portfolio-card primary">
+        <div class="card-header">
+          <div class="card-icon">
+            <i class="fas fa-wallet"></i>
+          </div>
+          <div class="card-menu">
+            
+          </div>
+        </div>
+        <div class="card-content">
+          <h3 class="card-value">BDT {{ "{:,.0f}".format(portfolio_stats.total_portfolio_value) }}</h3>
+          <p class="card-label">Total Portfolio Value</p>
+          <div class="card-trend positive">
+            <i class="fas fa-trending-up"></i>
+            
+          </div>
+        </div>
+      </div>
+
+      <div class="portfolio-card secondary">
+        <div class="card-header">
+          <div class="card-icon">
+            <i class="fas fa-chart-line"></i>
+          </div>
+        </div>
+        <div class="card-content">
+          <h3 class="card-value">{{ portfolio_stats.active_investments }}</h3>
+          <p class="card-label">Active Investments</p>
+          <div class="card-trend neutral">
+            
+            
+          </div>
+        </div>
+      </div>
+
+      <div class="portfolio-card tertiary">
+        <div class="card-header">
+          <div class="card-icon">
+            <i class="fas fa-trophy"></i>
+          </div>
+        </div>
+        <div class="card-content">
+          <h3 class="card-value">{{ "{:.1f}".format(portfolio_stats.success_rate) }}%</h3>
+          <p class="card-label">Success Rate</p>
+          <div class="card-trend positive">
+            <i class="fas fa-trending-up"></i>
+            
+          </div>
+        </div>
+      </div>
+
+      <div class="portfolio-card quaternary">
+        <div class="card-header">
+          <div class="card-icon">
+            <i class="fas fa-clock"></i>
+          </div>
+        </div>
+        <div class="card-content">
+          <h3 class="card-value">{{ pending_count }}</h3>
+          <p class="card-label">Pending Investments</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Investment Opportunities -->
+  <section class="opportunities-section">
+    <div class="section-header">
+      <h2 class="section-title">Investment Opportunities</h2>
+      <div class="section-filters">
+        <select class="filter-select" id="categoryFilter" onchange="applyFilters()">
+          <option value="">All Categories</option>
+          {% for category in categories %}
+          <option value="{{ category.category }}" {% if current_category == category.category %}selected{% endif %}>{{ category.category }}</option>
+          {% endfor %}
+        </select>
+        <select class="filter-select" id="stageFilter" onchange="applyFilters()">
+          <option value="">All Stages</option>
+          {% for stage in stages %}
+          <option value="{{ stage.stage }}" {% if current_stage == stage.stage %}selected{% endif %}>{{ stage.stage }}</option>
+          {% endfor %}
+        </select>
+        <button class="view-toggle active" data-view="grid">
+          <i class="fas fa-th"></i>
+        </button>
+        <button class="view-toggle" data-view="list">
+          <i class="fas fa-list"></i>
+        </button>
+      </div>
+    </div>
+    
+    <div class="opportunities-grid" id="opportunitiesGrid">
+      {% for idea in ideas %}
+      <div class="opportunity-card">
+        <div class="opportunity-header">
+          <div class="opportunity-image">
+            {% if idea.product_image %}
+              <img src="{{ url_for('static', filename='uploads/' + idea.product_image) }}" alt="Opportunity" {% if verified != 1 %}class="blurred-image"{% endif %}>
+            {% else %}
+              <img src="{{ url_for('static', filename='images/idea.jpg') }}" alt="Opportunity" {% if verified != 1 %}class="blurred-image"{% endif %}>
+            {% endif %}
+            <div class="opportunity-badge">Hot</div>
+          </div>
+          <button class="bookmark-btn">
+            <i class="far fa-bookmark"></i>
+          </button>
+        </div>
+        
+        <div class="opportunity-content">
+          <div class="opportunity-meta">
+            <span class="category">{{ idea.category }}</span>
+            <span class="stage">{{ idea.stage or 'Idea' }}</span>
+          </div>
+          
+          <h3 class="opportunity-title">{{ idea.title }}</h3>
+          <p class="opportunity-description">{{ idea.summary }}</p>
+          
+          {% if idea.tags %}
+          <div class="opportunity-tags mb-2">
+            {% for tag in idea.tags.split(',') %}
+            <span class="tag-badge">{{ tag.strip() }}</span>
+            {% endfor %}
+          </div>
+          {% endif %}
+          
+          <div class="opportunity-metrics">
+            <div class="metric">
+              <span class="metric-label">Seeking</span>
+              <span class="metric-value">${{ "{:,.0f}".format(idea.funding_needed) }}</span>
+            </div>
+            <div class="metric">
+              <span class="metric-label">Equity</span>
+              <span class="metric-value">{{ idea.equity_offered }}%</span>
+            </div>
+            <div class="metric">
+              <span class="metric-label">Valuation</span>
+              <span class="metric-value">TBD</span>
+            </div>
+          </div>
+          
+          <div class="opportunity-progress">
+            <div class="progress-bar">
+              <div class="progress-fill" data-progress="{{ idea.funding_progress }}"></div>
+            </div>
+            <span class="progress-text">{{ "{:.1f}".format(idea.funding_progress) }}% funded</span>
+          </div>
+          
+          <div class="opportunity-footer">
+            <div class="founder-info">
+              <img src="{{ url_for('static', filename='images/user_logo.png') }}" alt="Founder" class="founder-avatar">
+              <div>
+                <span class="founder-name">{{ idea.username }}</span>
+                <span class="founder-title">CEO & Founder</span>
+              </div>
+            </div>
+            
+            <div class="opportunity-actions">
+              {% if verified == 1 %}
+                <a href="{{ url_for('idea_details', idea_id=idea.id) }}" class="action-btn secondary">
+                  <i class="fas fa-eye"></i>
+                  View Details
+                </a>            
+              {% else %}
+                <button class="action-btn secondary disabled" disabled title="Verification required">
+                  <i class="fas fa-lock"></i>
+                  View Details
+                </button>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+      {% else %}
+      <div class="col-12 text-center py-5">
+        <h4 class="text-muted">No investment opportunities available yet</h4>
+        <p class="text-muted">Check back later for new ideas from creators!</p>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  // Auto-hide flash messages
+  setTimeout(function() {
+    const alerts = document.querySelectorAll(".custom-alert");
+    alerts.forEach(alert => {
+      alert.classList.remove("show");
+      alert.classList.add("fade");
+    });
+  }, 4000);
+
+  // Profile dropdown toggle
+  document.querySelector('.profile-dropdown').addEventListener('click', function() {
+    this.classList.toggle('active');
+  });
+
+  // Close dropdown when clicking outside
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('.profile-dropdown')) {
+      document.querySelector('.profile-dropdown').classList.remove('active');
+    }
+  });
+
+  // View toggle functionality
+  document.querySelectorAll('.view-toggle').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.view-toggle').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+
+      const view = this.dataset.view;
+      const grid = document.getElementById('opportunitiesGrid');
+
+      if (view === 'list') {
+        grid.classList.add('list-view');
+      } else {
+        grid.classList.remove('list-view');
+      }
+    });
+  });
+
+  // Filter buttons
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+    });
+  });
+
+  // Bookmark functionality
+  document.querySelectorAll('.bookmark-btn').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      const icon = this.querySelector('i');
+      if (icon.classList.contains('far')) {
+        icon.classList.remove('far');
+        icon.classList.add('fas');
+        this.classList.add('bookmarked');
+      } else {
+        icon.classList.remove('fas');
+        icon.classList.add('far');
+        this.classList.remove('bookmarked');
+      }
+    });
+  });
+
+  // Filter functionality
+  function applyFilters() {
+    const category = document.getElementById('categoryFilter').value;
+    const stage = document.getElementById('stageFilter').value;
+    const search = document.querySelector('input[name="search"]').value;
+
+    const url = new URL(window.location.href);
+    url.searchParams.set('category', category);
+    url.searchParams.set('stage', stage);
+    url.searchParams.set('search', search);
+
+    window.location.href = url.toString();
+  }
+
+  // Search form submission
+  document.querySelector('.search-container form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    applyFilters();
+  });
+
+  // Search functionality
+  document.querySelector('.search-input').addEventListener('focus', function() {
+    this.parentElement.classList.add('focused');
+  });
+
+  document.querySelector('.search-input').addEventListener('blur', function() {
+    this.parentElement.classList.remove('focused');
+  });
+
+  // Search on Enter key
+  document.querySelector('.search-input').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      applyFilters();
+    }
+  });
+  
+  // Set progress bar widths
+  document.addEventListener('DOMContentLoaded', function() {
+    const progressBars = document.querySelectorAll('.progress-fill');
+    progressBars.forEach(function(bar) {
+      const progress = bar.getAttribute('data-progress');
+      bar.style.width = progress + '%';
+    });
+  });
+</script>
+
+</body>
+</html>

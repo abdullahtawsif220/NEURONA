@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Creator Dashboard – Neurona</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/creator_dashboard.css') }}"/>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark py-3">
+  <div class="container d-flex justify-content-between align-items-center">
+
+    <div class="logo">
+      <img src="{{ url_for('static', filename='images/logo_white.png') }}" class="navbar-logo" alt="Neurona Logo">
+    </div>
+
+    <div class="profile-section d-flex align-items-center gap-3">
+
+      <span class="creator-name">{{ creator_name or username }}</span>
+      {% if verified == 1 %}
+        <span class="verification-badge ms-2">Verified</span>
+      {% endif %}
+
+      <div class="profile-dropdown position-relative">
+        <button class="profile-button">
+          <img src="{{ url_for('static', filename='images/user_logo.png') }}" alt="Profile" class="profile-img" />
+          <i class="fas fa-chevron-down dropdown-arrow"></i>
+        </button>
+
+
+
+        <div class="dropdown-content">
+          <a href="{{ url_for('profile') }}">Profile</a>
+          <a href="{{ url_for('creator_dashboard') }}">Dashboard</a>
+          <a href="{{ url_for('notifications') }}">Notifications</a>
+          <a href="{{ url_for('creator_investment_requests') }}">Investment Requests</a>
+          <a href="{{ url_for('creator_wallet') }}">Wallet</a>
+          <a href="{{ url_for('creator_portfolio') }}">Portfolio</a>
+          <a href="{{ url_for('logout') }}">Logout</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+  <div class="container mt-3">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+  </div>
+
+<section class="hero-section">
+  <div class="hero-background">
+    <div class="container">
+
+      {# Verification prompt (only shows if not verified) #}
+      {% if verified != 1 %}
+        <div class="row mt-4">
+          <div class="col-12 mb-3">
+            <div class="verification-prompt">
+              <div class="verification-content">
+                <i class="fas fa-shield-alt verification-icon"></i>
+                <div>
+                  {% if verified == 2 %}
+                    <h3>Verification Declined</h3>
+                    <p>Your previous request was declined. Please re-submit your details to try again.</p>
+                  {% else %}
+                    <h3>Complete Your Verification</h3>
+                    <p>Your account is not yet verified. Please complete your profile to submit ideas.</p>
+                  {% endif %}
+                </div>
+                <a href="{{ url_for('verify_creator') }}" class="verify-btn">
+                  {% if verified == 2 %}
+                    Re-verify Now
+                  {% else %}
+                    Verify Now
+                  {% endif %}
+                  <i class="fas fa-arrow-right ms-2"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endif %}
+
+      <div class="row mt-4">
+        
+        {# First card: Only visible if verified #}
+        {% if verified == 1 %}
+        <div class="col-lg-6 mb-3">
+          <div class="action-card">
+            <div class="card-header">
+              <span class="card-label">RECOMMENDED FOR YOU</span>
+            </div>
+            <div class="card-content">
+              <div class="card-icon">
+                <i class="fas fa-lightbulb"></i>
+              </div>
+              <div class="card-text">
+                <h5>Upload Ideas</h5>
+                <p>Share your innovative concepts with potential investors.</p>
+              </div>
+              <div class="card-action">
+                <a href="{{ url_for('upload_idea') }}" class="btn btn-get-started">Get started</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+
+        {# Second card: Always visible #}
+        <div class="col-lg-6 mb-3">
+          <div class="action-card">
+            <div class="card-header">
+              <span class="card-label">MANAGE REQUESTS</span>
+            </div>
+            <div class="card-content">
+              <div class="card-icon">
+                <i class="fas fa-handshake"></i>
+              </div>
+              <div class="card-text">
+                <h5>Investment Requests</h5>
+                <p>Review and manage investment requests from interested investors.</p>
+              </div>
+              <div class="card-action">
+                <a href="{{ url_for('creator_investment_requests') }}" class="btn btn-get-started">View Requests</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+  <section class="explore-section py-5">
+    <div class="container">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="section-title">Your Ideas</h2>
+        <a href="#" class="show-all-link">Show All <i class="fas fa-chevron-right ms-1"></i></a>
+      </div>
+
+      <div class="row g-4">
+        {% for idea in creator_ideas %}
+        <div class="col-lg-4 col-md-6">
+          <div class="idea-card">
+            {% if idea.product_image %}
+              <img src="{{ url_for('static', filename='uploads/' + idea.product_image) }}" class="card-img-top" alt="Product Image">
+            {% else %}
+              <img src="{{ url_for('static', filename='images/idea.jpg') }}" class="card-img-top" alt="Default Idea Image">
+            {% endif %}
+            <div class="card-body">
+              <h5 class="card-title">{{ idea.title }}</h5>
+              <p class="card-text">{{ idea.summary }}</p>
+              <div class="card-footer-info">
+                <div class="rating">
+                  <span class="category-badge">{{ idea.category }}</span>
+                </div>
+                <div class="price">
+                  <span>BDT {{ "{:,.0f}".format(idea.funding_needed) }}</span>
+                </div>
+              </div>
+              <div class="mt-2">
+                <small class="text-muted">Equity: {{ idea.equity_offered }}%</small>
+              </div>
+              <!-- Real-time progress information -->
+              <div class="mt-2">
+                <small class="text-muted">
+                  Raised: BDT {{ "{:,.0f}".format(idea.funded_amount or 0) }}
+                  ({{ "{:.1f}".format(((idea.funded_amount or 0) / idea.funding_needed * 100) if idea.funding_needed > 0 else 0) }}%)
+                </small>
+              </div>
+              <div class="progress mt-1" style="height: 5px;">
+                <div class="progress-bar"
+                     role="progressbar"
+                     data-progress="{{ idea.funding_progress }}"
+                     aria-valuenow="{{ idea.funding_progress }}"
+                     aria-valuemin="0"
+                     aria-valuemax="100">
+                </div>
+              </div>
+              <div class="action mt-2">
+                  <a href="{{ url_for('creator_idea_details', idea_id=idea.id) }}" class="idea-details-link">
+                    <i class="fas fa-arrow-right ms-1"></i>
+                    Idea Details
+                  </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% else %}
+        <div class="col-12 text-center py-5">
+          <h4 class="text-muted">No ideas uploaded yet</h4>
+          <p class="text-muted">Start by uploading your first innovative idea!</p>
+          <a href="{{ url_for('upload_idea') }}" class="btn btn-primary">Upload Your First Idea</a>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    setTimeout(function() {
+      const alert = document.querySelector(".alert");
+      if (alert) {
+        alert.classList.remove("show");
+        alert.classList.add("fade");
+      }
+    }, 3000);
+    
+    // Set progress bar widths
+    document.addEventListener('DOMContentLoaded', function() {
+      const progressBars = document.querySelectorAll('.progress-bar');
+      progressBars.forEach(function(bar) {
+        const progress = bar.getAttribute('data-progress');
+        bar.style.width = progress + '%';
+      });
+    });
+  </script>
+
+</body>
+</html>

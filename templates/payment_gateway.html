@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Funds - Payment Gateway</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f0f2f5;
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .payment-container {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 550px;
+            padding: 40px;
+            text-align: center;
+        }
+        .payment-header {
+            margin-bottom: 30px;
+        }
+        .payment-header h3 {
+            font-weight: 700;
+            color: #34495e;
+        }
+        .payment-header p {
+            color: #7f8c8d;
+        }
+        .payment-methods {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            justify-content: center;
+        }
+        .payment-method-card {
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 120px;
+        }
+        .payment-method-card.active {
+            border-color: #1abc9c;
+            box-shadow: 0 0 10px rgba(26, 188, 156, 0.3);
+        }
+        .payment-method-card img {
+            width: 100%;
+            max-width: 80px;
+        }
+        .payment-method-card span {
+            display: block;
+            margin-top: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #555;
+        }
+        .bank-icon {
+            font-size: 3rem;
+            color: #1abc9c;
+            margin-bottom: 8px;
+        }
+        .payment-form {
+            text-align: left;
+        }
+        .form-label {
+            font-weight: 600;
+        }
+        .form-control {
+            border-radius: 8px;
+            padding: 12px;
+        }
+        .btn-pay {
+            width: 100%;
+            padding: 12px;
+            border-radius: 50px;
+            font-weight: 600;
+            background-color: #1abc9c;
+            border: none;
+            color: white;
+            transition: background-color 0.3s ease;
+        }
+        .btn-pay:hover {
+            background-color: #16a085;
+        }
+        .otp-modal {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+            box-shadow: 0 4px 25px rgba(0,0,0,0.2);
+            position: relative;
+        }
+        .form-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        .form-row .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        .form-select {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 12px;
+            width: 100%;
+            font-size: 14px;
+        }
+        .is-valid {
+            border-color: #28a745 !important;
+        }
+        .is-invalid {
+            border-color: #dc3545 !important;
+        }
+        .invalid-feedback {
+            display: block;
+            color: #dc3545;
+            font-size: 0.875rem;
+            margin-top: 5px;
+        }
+        .modal-content h5 {
+            font-weight: 700;
+        }
+        .otp-input {
+            text-align: center;
+            font-size: 1.5rem;
+            letter-spacing: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="payment-container">
+        <div class="payment-header">
+            <h3>Add Funds to Wallet</h3>
+            <p>Select a payment method to proceed.</p>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="alert-container mb-3">
+            {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+
+        {% if step == 'method' %}
+        <div id="step-method" class="payment-form">
+            <h5 class="mb-3 text-center">Choose Payment Method</h5>
+            <div class="payment-methods">
+                <div class="payment-method-card" onclick="selectPaymentMethod('bkash')">
+                    <img src="{{ url_for('static', filename='images/bkash_logo.png') }}" alt="Bkash Logo">
+                    <span>bKash</span>
+                </div>
+                <div class="payment-method-card" onclick="selectPaymentMethod('bank')">
+                    <div class="bank-icon">
+                        <i class="fas fa-university"></i>
+                    </div>
+                    <span>Bank Account</span>
+                </div>
+            </div>
+            <form id="methodForm" action="{{ url_for('investor_add_funds') }}" method="post">
+                <input type="hidden" name="current_step" value="method">
+                <input type="hidden" name="payment_method" id="selected_method" value="">
+                <input type="hidden" name="amount" value="{{ amount|int }}">
+            </form>
+        </div>
+        {% endif %}
+
+        {% if step == 'number' %}
+        <div id="step-number" class="payment-form">
+            <h5 class="mb-3 text-center text-success">Bkash is the only available option.</h5>
+            <div class="mb-3">
+                <img src="{{ url_for('static', filename='images/bkash_logo.png') }}" class="img-fluid" alt="Bkash Logo" style="height: 40px;">
+            </div>
+            <form action="{{ url_for('investor_add_funds') }}" method="post">
+                <input type="hidden" name="current_step" value="number">
+                <input type="hidden" name="payment_method" value="bkash">
+                <div class="mb-3">
+                    <label for="bkash-number" class="form-label">Bkash Registered Number</label>
+                    <input type="tel" class="form-control" id="bkash-number" name="bkash_number" placeholder="e.g., +8001*********" required>
+                </div>
+                <div class="mb-4">
+                    <label for="amount" class="form-label">Amount (BDT)</label>
+                    <input type="number" class="form-control" id="amount" name="amount" value="{{ amount|int }}" min="1" max="50000" required>
+                    <small class="text-muted d-block mt-1">Maximum limit per transaction is BDT 50,000</small>
+                </div>
+                <button type="submit" class="btn btn-pay">Proceed to OTP</button>
+            </form>
+        </div>
+        {% endif %}
+
+        {% if step == 'bank_details' %}
+        <div id="step-bank-details" class="payment-form">
+            <div class="mb-3 text-center">
+                <div class="bank-icon">
+                    <i class="fas fa-university"></i>
+                </div>
+            </div>
+            <h5 class="text-center mb-4">Bank Account Details</h5>
+            <form action="{{ url_for('investor_add_funds') }}" method="post" id="bankDetailsForm">
+                <input type="hidden" name="current_step" value="bank_details">
+                <input type="hidden" name="payment_method" value="bank">
+                <input type="hidden" name="amount" value="{{ amount }}">
+                
+                <div class="form-group">
+                    <label for="holder_name">Account Holder Name</label>
+                    <input type="text" class="form-control" id="holder_name" name="holder_name" required>
+                    <div class="invalid-feedback">Please enter the account holder name.</div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="bank_name">Bank Name</label>
+                        <select class="form-select" id="bank_name" name="bank_name" required>
+                            <option value="">Select Bank</option>
+                            <option value="Dutch Bangla Bank">Dutch Bangla Bank</option>
+                            <option value="Brac Bank">Brac Bank</option>
+                            <option value="Eastern Bank">Eastern Bank</option>
+                            <option value="City Bank">City Bank</option>
+                            <option value="Standard Chartered">Standard Chartered</option>
+                            <option value="HSBC">HSBC</option>
+                            <option value="Islami Bank">Islami Bank</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <div class="invalid-feedback">Please select a bank.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="account_status">Account Type</label>
+                        <select class="form-select" id="account_status" name="account_status" required>
+                            <option value="">Select Type</option>
+                            <option value="Current">Current</option>
+                            <option value="Savings">Savings</option>
+                        </select>
+                        <div class="invalid-feedback">Please select account type.</div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="account_number">Account Number</label>
+                        <input type="text" class="form-control" id="account_number" name="account_number" required>
+                        <div class="invalid-feedback">Please enter a valid account number (digits only).</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="routing_number">Routing Number</label>
+                        <input type="text" class="form-control" id="routing_number" name="routing_number" required>
+                        <div class="invalid-feedback">Please enter a valid routing number (digits only).</div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="branch_name">Branch Name</label>
+                        <input type="text" class="form-control" id="branch_name" name="branch_name" required>
+                        <div class="invalid-feedback">Please enter the branch name.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="nid_number">NID Number</label>
+                        <input type="text" class="form-control" id="nid_number" name="nid_number" maxlength="10" required>
+                        <div class="invalid-feedback">NID must be exactly 10 digits.</div>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn btn-pay">Proceed to Payment</button>
+            </form>
+        </div>
+        {% endif %}
+
+        {% if step == 'otp' %}
+        <div id="step-otp" class="otp-modal">
+            <div class="modal-content">
+                <div class="d-flex justify-content-center mb-3">
+                    <img src="{{ url_for('static', filename='images/bkash_logo.png') }}" alt="Bkash Logo" style="height: 40px;">
+                </div>
+                <h5 class="mb-3">Enter OTP Code</h5>
+                <p>An OTP has been sent to your number: <br><strong>{{ bkash_number }}</strong></p>
+                <form action="{{ url_for('investor_add_funds') }}" method="post">
+                    <input type="hidden" name="current_step" value="otp">
+                    <input type="hidden" name="payment_method" value="bkash">
+                    <input type="hidden" name="bkash_number" value="{{ bkash_number }}">
+                    <input type="hidden" name="amount" value="{{ amount }}">
+                    <div class="mb-3">
+                        <label for="otp" class="form-label visually-hidden">OTP</label>
+                        <input type="text" class="form-control otp-input" id="otp" name="otp" maxlength="6" required>
+                    </div>
+                    <small class="text-muted d-block mb-3">Hint: The OTP is 456721</small>
+                    <button type="submit" class="btn btn-pay">Verify OTP</button>
+                </form>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if step == 'pin' %}
+        <div id="step-pin" class="payment-form">
+            <div class="mb-3 text-center">
+                {% if payment_method == 'bkash' %}
+                <img src="{{ url_for('static', filename='images/bkash_logo.png') }}" class="img-fluid" alt="Bkash Logo" style="height: 40px;">
+                {% else %}
+                <div class="bank-icon">
+                    <i class="fas fa-university"></i>
+                </div>
+                {% endif %}
+            </div>
+            <h5 class="text-center mb-4">Confirm Payment</h5>
+            <form action="{{ url_for('investor_add_funds') }}" method="post">
+                <input type="hidden" name="current_step" value="pin">
+                <input type="hidden" name="payment_method" value="{{ payment_method }}">
+                <input type="hidden" name="bkash_number" value="{{ bkash_number }}">
+                {% if bank_details %}
+                <input type="hidden" name="holder_name" value="{{ bank_details.holder_name }}">
+                <input type="hidden" name="bank_name" value="{{ bank_details.bank_name }}">
+                <input type="hidden" name="account_number" value="{{ bank_details.account_number }}">
+                <input type="hidden" name="branch_name" value="{{ bank_details.branch_name }}">
+                {% endif %}
+                <input type="hidden" name="amount" value="{{ amount }}">
+                <div class="mb-3">
+                    <label for="amount-display" class="form-label">Amount to Pay</label>
+                    <input type="text" class="form-control" id="amount-display" value="BDT {{ '%.2f'|format(amount) }}" readonly>
+                </div>
+                {% if payment_method == 'bank' and bank_details %}
+                <div class="mb-3">
+                    <label class="form-label">Bank Details</label>
+                    <div class="form-control" readonly style="background-color: #f8f9fa;">
+                        <strong>{{ bank_details.holder_name }}</strong><br>
+                        {{ bank_details.bank_name }} - {{ bank_details.branch_name }}<br>
+                        Account: {{ bank_details.account_number }}
+                    </div>
+                </div>
+                {% endif %}
+                <div class="mb-4">
+                    <label for="pin" class="form-label">
+                        {% if payment_method == 'bkash' %}Bkash PIN{% else %}Transaction PIN{% endif %}
+                    </label>
+                    <input type="password" class="form-control" id="pin" name="pin" maxlength="4" required>
+                    <small class="text-muted d-block mt-1">
+                        {% if payment_method == 'bank' %}Hint: Default PIN is 1234{% endif %}
+                    </small>
+                </div>
+                <button type="submit" class="btn btn-pay">Complete Payment</button>
+            </form>
+        </div>
+        {% endif %}
+    </div>
+
+<script>
+function selectPaymentMethod(method) {
+    // Remove active class from all cards
+    document.querySelectorAll('.payment-method-card').forEach(card => {
+        card.classList.remove('active');
+    });
+    
+    // Add active class to selected card
+    event.currentTarget.classList.add('active');
+    
+    // Set the selected method
+    document.getElementById('selected_method').value = method;
+    
+    // Submit the form after a short delay
+    setTimeout(() => {
+        document.getElementById('methodForm').submit();
+    }, 300);
+}
+
+// Bank details form validation
+document.addEventListener('DOMContentLoaded', function() {
+    const bankForm = document.getElementById('bankDetailsForm');
+    if (bankForm) {
+        bankForm.addEventListener('submit', function(e) {
+            let isValid = true;
+            
+            // Account number validation (digits only)
+            const accountNumber = document.getElementById('account_number');
+            if (!/^\d+$/.test(accountNumber.value.trim())) {
+                accountNumber.classList.add('is-invalid');
+                isValid = false;
+            } else {
+                accountNumber.classList.remove('is-invalid');
+                accountNumber.classList.add('is-valid');
+            }
+            
+            // Routing number validation (digits only)
+            const routingNumber = document.getElementById('routing_number');
+            if (!/^\d+$/.test(routingNumber.value.trim())) {
+                routingNumber.classList.add('is-invalid');
+                isValid = false;
+            } else {
+                routingNumber.classList.remove('is-invalid');
+                routingNumber.classList.add('is-valid');
+            }
+            
+            // NID validation (exactly 10 digits)
+            const nidNumber = document.getElementById('nid_number');
+            if (!/^\d{10}$/.test(nidNumber.value.trim())) {
+                nidNumber.classList.add('is-invalid');
+                isValid = false;
+            } else {
+                nidNumber.classList.remove('is-invalid');
+                nidNumber.classList.add('is-valid');
+            }
+            
+            // Prevent form submission if validation fails
+            if (!isValid) {
+                e.preventDefault();
+            }
+        });
+        
+        // Real-time validation
+        document.getElementById('account_number').addEventListener('input', function() {
+            this.value = this.value.replace(/\D/g, '');
+        });
+        
+        document.getElementById('routing_number').addEventListener('input', function() {
+            this.value = this.value.replace(/\D/g, '');
+        });
+        
+        document.getElementById('nid_number').addEventListener('input', function() {
+            this.value = this.value.replace(/\D/g, '');
+            if (this.value.length > 10) {
+                this.value = this.value.slice(0, 10);
+            }
+        });
+    }
+});
+</script>
+
+</body>
+</html>
