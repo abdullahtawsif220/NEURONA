@@ -59,12 +59,18 @@
     }
     .feature-list li i {
       font-size: 1.5rem;
-      color: #007bff; /* Or a color that matches your brand */
+      color: #007bff;
       margin-right: 15px;
-      min-width: 25px; /* Ensure icon takes up consistent space */
+      min-width: 25px;
       text-align: center;
     }
-
+    .founders-section h2 {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .founder-card {
+      border-radius: 12px;
+    }
     /* FIX: Override any potential rogue gradients or shadows from style.css */
     body, .navbar {
       background-image: none !important;
@@ -95,9 +101,9 @@
 
     <h2>What We Offer</h2>
     <ul class="feature-list">
-      <li>  A streamlined, secure platform to showcase your ideas, connect with potential investors, and gain the funding necessary to develop your projects. We provide tools to present your concepts professionally and reach a targeted audience.</li>
-      <li>  Exclusive access to a curated pipeline of innovative ideas across various industries. Our platform facilitates easy discovery, comprehensive due diligence, and direct communication with promising creators, helping you make informed investment decisions.</li>
-      <li>  Neurona is more than just a marketplace; it's a community where ideas are shared, collaborations are formed, and success stories are written. We foster an environment of trust, transparency, and mutual respect.</li>
+      <li> A streamlined, secure platform to showcase your ideas, connect with potential investors, and gain the funding necessary to develop your projects. We provide tools to present your concepts professionally and reach a targeted audience.</li>
+      <li> Exclusive access to a curated pipeline of innovative ideas across various industries. Our platform facilitates easy discovery, comprehensive due diligence, and direct communication with promising creators, helping you make informed investment decisions.</li>
+      <li> Neurona is more than just a marketplace; it's a community where ideas are shared, collaborations are formed, and success stories are written. We foster an environment of trust, transparency, and mutual respect.</li>
     </ul>
 
     <h2>Our Commitment to Security and Trust</h2>
@@ -106,6 +112,41 @@
     <h2>Join the Neurona Revolution</h2>
     <p>Whether you're a visionary creator with an idea that can change the world, or a discerning investor looking for the next impactful venture, Neurona is your platform. Join us today and be a part of the future of innovation and investment.</p>
 
+    <!-- Meet the Founders Section -->
+    <div class="founders-section mt-5">
+      <h2>Meet the Founders</h2>
+      <div class="d-flex justify-content-center gap-4 flex-wrap">
+        <!-- Founder 1 -->
+        <div class="card bg-dark text-white shadow founder-card" style="width: 14rem;">
+          <div class="card-body text-center">
+            <i class="fas fa-user-circle fa-3x mb-3 text-primary"></i>
+            <h5 class="card-title">S.M Abdullah Tawsif</h5>
+            <p class="card-text small">Founder</p>
+            <a href="#" class="btn btn-primary btn-sm rounded-pill">Profile</a>
+          </div>
+        </div>
+
+        <!-- Founder 2 -->
+        <div class="card bg-dark text-white shadow founder-card" style="width: 14rem;">
+          <div class="card-body text-center">
+            <i class="fas fa-user-circle fa-3x mb-3 text-success"></i>
+            <h5 class="card-title">Abu Shafayet</h5>
+            <p class="card-text small">Founder</p>
+            <a href="#" class="btn btn-success btn-sm rounded-pill">Profile</a>
+          </div>
+        </div>
+
+        <!-- Founder 3 -->
+        <div class="card bg-dark text-white shadow founder-card" style="width: 14rem;">
+          <div class="card-body text-center">
+            <i class="fas fa-user-circle fa-3x mb-3 text-info"></i>
+            <h5 class="card-title">Syed Mohammed Mashhud Farah</h5>
+            <p class="card-text small">Founder</p>
+            <a href="#" class="btn btn-info btn-sm rounded-pill">Profile</a>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <footer class="bg-black text-center text-white py-3 mt-auto">
